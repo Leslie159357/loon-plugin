@@ -1,0 +1,19 @@
+#!name=Memrise Pro Unlock v5
+#!desc=解锁Memrise所有Pro功能（AI对话无限、Pro图标、小伙伴、Stories、视频）- 支持双斜杠
+#!system=ios
+#!author=Leslie159357
+#!icon=https://static.memrise.com/favicons/android-chrome-512x512.png
+#!date=2026-05-24
+#!version=5.0
+
+[MITM]
+hostname = %APPEND% api.memrise.com, app.memrise.com
+
+[Script]
+http-response ^https?://(api|app)\.memrise\.com/v1\.25/me/?$ script-path=https://raw.githubusercontent.com/gist/raw/e737d767af93ec5d42bb3477587c938e/memrise.js, requires-body=true, timeout=30, tag=Memrise - 用户资料
+http-response ^https?://api\.memrise\.com/v1\.25/me/subscriptions/?$ script-path=https://raw.githubusercontent.com/gist/raw/e737d767af93ec5d42bb3477587c938e/memrise.js, requires-body=true, timeout=30, tag=Memrise - 订阅
+http-response ^https?://api\.memrise\.com/v1\.25/me/language_pairs/\d+/features/availability/ script-path=https://raw.githubusercontent.com/gist/raw/e737d767af93ec5d42bb3477587c938e/memrise.js, requires-body=true, timeout=30, tag=Memrise - 功能解锁
+http-response ^https?://api\.memrise\.com/v1\.25/language_pairs/\d+/buddies/ script-path=https://raw.githubusercontent.com/gist/raw/e737d767af93ec5d42bb3477587c938e/memrise.js, requires-body=true, timeout=30, tag=Memrise - 小伙伴
+http-response ^https?://api\.memrise\.com/v1\.25/me/language_pairs/\d+/media/\d+/ script-path=https://raw.githubusercontent.com/gist/raw/e737d767af93ec5d42bb3477587c938e/memrise.js, requires-body=true, timeout=30, tag=Memrise - 视频
+http-response ^https?://(api|app)\.memrise\.com/v1\.25/?/membot/\d+/missions/[^/]+/?$ script-path=https://raw.githubusercontent.com/gist/raw/e737d767af93ec5d42bb3477587c938e/memrise.js, requires-body=true, timeout=30, tag=Memrise - 无限对话
+http-response ^https?://(api|app)\.memrise\.com/v1\.25/?/membot/\d+/missions/[^/]+/goal/ script-path=https://raw.githubusercontent.com/gist/raw/e737d767af93ec5d42bb3477587c938e/memrise.js, requires-body=true, timeout=30, tag=Memrise - 消息限制

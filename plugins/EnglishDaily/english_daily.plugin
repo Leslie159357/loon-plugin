@@ -1,0 +1,41 @@
+#!name=EnglishDaily (ABC Zone) VIP Unlock v5
+#!desc=英语天天练 VIP解锁 v5 - 全面拦截支付接口+购买页+学而思权限
+#!author=Minis
+#!tag=解锁,教育,英语天天练
+#!system=ios
+#!icon=https://static0.xesimg.com/common/abczone/favicon.ico
+
+[Script]
+http-response ^https?://app\.chuangjing\.com/client/verticalmembership script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-VerticalMembership
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/get-pay-url script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-GetPayUrl
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/order-create script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-OrderCreate
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/pre-sign script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-PreSign
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/order-stay script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-OrderStay
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/coupon-query script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-CouponQuery
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/has_union_user script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-HasUnion
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/order-confirm script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-OrderConfirm
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/check_ios_backdoor script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-Backdoor
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/remote-control/live-auth script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-LiveAuth
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/ucenter/get-user-data script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-UcenterData
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/book/get-user-data script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-BookData
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/study-level/get-my-level script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-MyLevel
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/book/get-user-level-list script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-LevelList
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/book/get-level-list/new-v2 script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-LevelListNew
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/book-article/get-mode-status script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-ModeStatus
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/pay/get-user-data script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-PayUserData
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/book-article/get-article-data script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-ArticleData
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/dialogue/get-theme-list script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-DialogueTheme
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/hello/get-level-list script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-HelloLevel
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/camb/get-practice-list script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-CambPractice
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/book/get-book-list-v3 script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-BookListV3
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/svip/expansion-course/get-video-list script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-SVIPVideo
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/svip/expansion-course/get-category-list script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-SVIPCategory
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/user/cheese/get script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-Cheese
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/user/power/get script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-Power
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/user/power/is-enough script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-PowerEnough
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/user/stone/get script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-Stone
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/dress/diamond-shop-dress-list script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-DiamondShop
+http-response ^https?://app\.chuangjing\.com/abc-api/v3/parent-control/check-in-control script-path=https://gist.githubusercontent.com/Leslie159357/6e008962c81b6eeb7731326cb6679318/raw/english_daily_v4.js, requires-body=true, tag=ABCZone-ParentControl
+
+[Mitm]
+hostname = %APPEND% app.chuangjing.com

@@ -1,0 +1,13 @@
+#!name=DejaVocab Unlock
+#!desc=解锁 DejaVocab VIP、语感网络、无限额度
+#!author=Minis
+#!home=https://dejavocab.com
+#!icon=https://dejavocab.com/favicon.ico
+#!version=3.0
+#!date=2026-05-24
+
+[MITM]
+hostname = dejavocab.com
+
+[Script]
+http-response ^https?://dejavocab\.com/api/(subscription/status|user-profile|colbert/index-status|colbert/build-index|user-phrases) script-path=https://gist.githubusercontent.com/Leslie159357/46276e1a6956ec603dd5c1a25de04373/raw/49ebe655e53bff2ebc444e2e9861ec2ee930c8c8/DejaVocab.js, requires-body=true, timeout=60

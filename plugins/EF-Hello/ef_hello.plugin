@@ -1,0 +1,24 @@
+#!name=EF Hello Premium Unlock v10.1
+#!desc=EF Hello v10.1 - 解锁PREMIUM会员+65门课程+进度伪造解锁下一课
+#!home=https://hello.ef.cn
+#!author=Minis
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/31/41/4a/31414a35-2d72-a787-9dd0-6ddd4f8e11aa/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg
+#!date=2026-05-25
+
+[General]
+[Proxy]
+[Rule]
+[Remote Proxy]
+[Host]
+[URL Rewrite]
+[MITM]
+hostname = %APPEND% api.rc-backup.com, v2.api.hello.ef.cn, v2.api.hello.ef.com
+
+[Script]
+http-response ^https?://api\.rc-backup\.com/v1/(subscribers|product_entitlement_mapping) script-path=https://gist.githubusercontent.com/Leslie159357/406cd960374e3045ec3db669da9deabc/raw/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello RC
+http-response ^https?://api\.rc-backup\.com/v1/subscribers/.+/offerings script-path=https://gist.githubusercontent.com/Leslie159357/406cd960374e3045ec3db669da9deabc/raw/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello Offerings
+http-response ^https?://api\.rc-backup\.com/v1/subscribers/.+/attributes script-path=https://gist.githubusercontent.com/Leslie159357/406cd960374e3045ec3db669da9deabc/raw/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello Attributes
+http-response ^https?://v2\.api\.hello\.ef\.(cn|com)/graphql script-path=https://gist.githubusercontent.com/Leslie159357/406cd960374e3045ec3db669da9deabc/raw/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello GraphQL
+
+[Plugin]
+icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/31/41/4a/31414a35-2d72-a787-9dd0-6ddd4f8e11aa/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg

@@ -1,0 +1,11 @@
+#!name=FitRead VIP解锁
+#!desc=修改 CurrentUser 响应中的 isVip 字段，解锁 FitRead 全部VIP功能
+#!author=Minis
+#!tag=解锁,教育
+#!system=ios
+
+[Script]
+http-response ^https?:\/\/api\.fitread\.cn\/api\/User\/CurrentUser script-path=https://gist.githubusercontent.com/Leslie159357/a3881ffdf738dd88e35d818c287c3925/raw/fitread_vip.js, requires-body=true, tag=FitRead VIP解锁
+
+[Mitm]
+hostname = api.fitread.cn

@@ -1,0 +1,38 @@
+#!name=懒人听书 VIP 解锁
+#!desc=破解懒人听书 VIP 会员，畅听所有付费内容
+#!system=ios
+#!icon=https://raw.githubusercontent.com/WeiGiegie/666/main/icon/lrts.png
+#!author=定制
+#!date=2026-05-24
+#!homepage=https://github.com/xxx/lanrentingshu
+
+[Script]
+# 用户信息（核心VIP判断）
+http-response ^https?:\/\/(shapi|gzapi)\.(mting\.info|lanrentingshu\.com)\/yyting\/userclient\/ClientGetUserInfo\.action requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# 用户信息（ajax路径）
+http-response ^https?:\/\/shapi\.mting\.info\/ajax\/getUserInfo requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# VIP状态核心判断
+http-response ^https?:\/\/(shapi|gzapi)\.mting\.info\/yyting\/user\/vipInfo requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# 播放路径
+http-response ^https?:\/\/(shapi|gzapi)\.mting\.info\/yyting\/v3\/gateway\/getListenPath requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# 用户中心资料
+http-response ^https?:\/\/gzapi\.lanrentingshu\.com\/lrts\/cgi\/user\/getUserProfileInfo\.action requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# VIP套餐推荐
+http-response ^https?:\/\/shapi\.mting\.info\/yyting\/price\/vip\/suite\/recommend requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# 免费模式信息
+http-response ^https?:\/\/shapi\.mting\.info\/yyting\/userclient\/getFreeModeInfo requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# 全局免费模式（时间相关）
+http-response ^https?:\/\/shapi\.mting\.info\/yyting\/globalfree\/getGlobalFreeModeInfo requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+# 生日特权
+http-response ^https?:\/\/shapi\.lanrentingshu\.com\/lrts\/cgi\/user\/birthdayPrivilege requires-body=1,max-size=0,script-path=https://gist.githubusercontent.com/Leslie159357/3ebba1a59e088c50ddee958d45b58695/raw/lrts_vip.js
+
+[MITM]
+hostname = shapi.mting.info:443, gzapi.mting.info, shapi.lanrentingshu.com, gzapi.lanrentingshu.com

@@ -1,0 +1,17 @@
+#!name=多邻国 v10 最终版
+#!desc=紫水晶改满 + 日历1000天🔥 + 连胜1000天 + 安全盾2099 + 全成就
+#!author=Minis
+#!tag=教育,多邻国
+#!system=ios
+#!date=2026-05-24
+#!version=10.0
+
+[Script]
+http-request ^https?:\/\/ios-api-2\.duolingo\.cn\/2023-05-23\/batch script-path=https://gist.githubusercontent.com/Leslie159357/f1207e1263ea800ab41f0cec2ed08270/raw/duolingo_gems.js, requires-body=true, timeout=10, tag=多邻国 请求拦截
+
+http-response ^https?:\/\/ios-api-2\.duolingo\.cn script-path=https://gist.githubusercontent.com/Leslie159357/f1207e1263ea800ab41f0cec2ed08270/raw/duolingo_gems.js, requires-body=true, timeout=10, max-size=200000, tag=多邻国 响应拦截
+
+http-response ^https?:\/\/duolingo-achievements-prod\.duolingo\.cn script-path=https://gist.githubusercontent.com/Leslie159357/f1207e1263ea800ab41f0cec2ed08270/raw/duolingo_gems.js, requires-body=true, timeout=10, max-size=200000, tag=多邻国 成就修改
+
+[Mitm]
+hostname = ios-api-2.duolingo.cn, duolingo-achievements-prod.duolingo.cn
