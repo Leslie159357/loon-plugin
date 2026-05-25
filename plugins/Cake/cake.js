@@ -103,8 +103,9 @@ try {
     if (obj.data.restrictedNow !== false) { obj.data.restrictedNow = false; changed = true; }
     if (obj.data.membershipOnly !== false) { obj.data.membershipOnly = false; changed = true; }
     if (obj.data.restrictedAfterFreeTrial !== false) { obj.data.restrictedAfterFreeTrial = false; changed = true; }
-    // puzzle heart
+    // puzzle heart - count也要改成999！
     if (obj.data.puzzle && obj.data.puzzle.heart) {
+      obj.data.puzzle.heart.count = 999;
       obj.data.puzzle.heart.maximumCount = 999;
       obj.data.puzzle.heart.regenerationTime = 0;
       obj.data.puzzle.heart.regenerationTimeRemaining = 0;
