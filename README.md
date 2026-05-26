@@ -17,6 +17,7 @@
 | **ELSA Speak** | — | AI 英语口语教练 · Premium 解锁（课程/AI对话/角色扮演/宝石） | [`elsa.plugin`](plugins/ELSA-Speak/elsa.plugin) |
 | **懒人听书** | — | 听书 App · VIP 解锁 v3 终极版 | [`lanrentingshu.plugin`](plugins/LazyListen/lanrentingshu.plugin) |
 | **InkerSpeak** | — | 引客英语/造句说 · Premium 解锁 | [`inkerspeak.plugin`](plugins/InkerSpeak/inkerspeak.plugin) |
+| **YouMind** | `6744521608` | AI 创作工作室 · Pro/Max 订阅+积分解锁（支持camelCase/snake_case） | [`youmind.plugin`](plugins/YouMind/youmind.plugin) |
 
 ## 🔧 使用方法
 
