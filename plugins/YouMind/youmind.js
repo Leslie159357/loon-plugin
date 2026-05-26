@@ -1,4 +1,4 @@
-// YouMind Premium Unlock - Loon Script v1.2
+// YouMind Premium Unlock - Loon Script v1.3
 // By Leslie159357
 // Fix: Now handles both camelCase AND snake_case response formats
 //       Also patches YOUMIND_USER embedded in SSR HTML pages
@@ -59,8 +59,8 @@ if (url.includes('/api/v1/getCurrentUser')) {
   const fakeSubscription = {
     "id": "sub_" + Date.now(),
     "space_id": "",
-    "product_tier": "pro",
-    "sub_tier": 2,
+    "product_tier": "max",
+    "sub_tier": 3,
     "billing_interval": "yearly",
     "status": "active",
     "current_period_start": now,
@@ -69,7 +69,7 @@ if (url.includes('/api/v1/getCurrentUser')) {
     "provider": "apple",
     "is_cny": false,
     "credits": 999999,
-    "monthly_credits": 200000,
+    "monthly_credits": 999999,
     "renew_change": null,
     "created_at": now,
     "updated_at": now
@@ -84,7 +84,7 @@ if (url.includes('/api/v1/getCurrentUser')) {
       
       if (camel) {
         // camelCase format (x-use-camel-case: true)
-        bodyObj.productTier = 'pro';
+        bodyObj.productTier = 'max';
         bodyObj.subTier = 3;
         bodyObj.monthlyBalance = 999999;
         bodyObj.monthlyQuota = 999999;
@@ -100,7 +100,7 @@ if (url.includes('/api/v1/getCurrentUser')) {
         bodyObj.currentPeriodEnd = '2099-12-31T23:59:59.000Z';
       } else {
         // snake_case format (x-use-snake-case: true)
-        bodyObj.product_tier = 'pro';
+        bodyObj.product_tier = 'max';
         bodyObj.sub_tier = 3;
         bodyObj.monthly_balance = 999999;
         bodyObj.monthly_quota = 999999;
