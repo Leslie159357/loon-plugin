@@ -1,4 +1,4 @@
-// InkerSpeak (引客英语 / 造句说) Premium Unlock v1.3
+// InkerSpeak (引客英语 / 造句说) Premium Unlock v1.4
 // API: yinke.jinguizi07.cn - 全部明文JSON ✅ 无签名验证
 
 const url = $request.url;
@@ -10,42 +10,33 @@ if (!url.includes('yinke.jinguizi07.cn')) {
   return;
 }
 
-let obj = JSON.parse(body);
-let modified = false;
-
-// helper: unlock isVip in array/object
-function unlockVIP(data) {
-  if (!data) return false;
-  if (Array.isArray(data)) {
-    let count = 0;
-    for (const item of data) {
-      if (item && typeof item === 'object' && item.isVip === true) {
-        item.isVip = false;
-        count++;
-      }
-    }
-    if (count > 0) { console.log(`解锁 ${count} 个VIP项目`); return true; }
-  } else if (typeof data === 'object') {
-    for (const key of ['page', 'content', 'stories', 'items', 'list', 'records']) {
-      const arr = data[key];
-      if (Array.isArray(arr)) {
-        let count = 0;
-        for (const item of arr) {
-          if (item && typeof item === 'object' && item.isVip === true) {
-            item.isVip = false;
-            count++;
-          }
-        }
-        if (count > 0) { console.log(`解锁 ${count} 个VIP项目(${key})`); return true; }
-      }
-    }
-  }
-  return false;
+let obj;
+try {
+  obj = JSON.parse(body);
+} catch(e) {
+  $done({ body });
+  return;
 }
 
-// 将data对象设为premium
+let modified = false;
+
+// helper: unlock isVip in array
+function unlockVIPinArray(arr) {
+  if (!Array.isArray(arr)) return false;
+  let count = 0;
+  for (const item of arr) {
+    if (item && typeof item === 'object' && item.isVip === true) {
+      item.isVip = false;
+      count++;
+    }
+  }
+  if (count > 0) console.log(`解锁 ${count} 个VIP项目`);
+  return count > 0;
+}
+
+// helper: set premium fields
 function setPremium(d) {
-  if (!d) return false;
+  if (!d || typeof d !== 'object') return false;
   d.memberType = 'premium';
   d.isMember = true;
   d.membershipEndDate = 4092599349000;
@@ -54,8 +45,8 @@ function setPremium(d) {
   return true;
 }
 
-// 1. Apple登录 → premium + 强制设置remainingTimeQuota
-if (url.includes('/api/auth/apple-login') && method === 'POST') {
+// 1. Apple登录 → premium
+if (url.includes('/api/auth/apple-login')) {
   if (obj.data) {
     setPremium(obj.data);
     modified = true;
@@ -63,7 +54,7 @@ if (url.includes('/api/auth/apple-login') && method === 'POST') {
   }
 }
 
-// 2. user-info → premium (支持GET和POST)
+// 2. user-info → premium
 if (url.includes('/api/user/user-info')) {
   if (obj.data) {
     setPremium(obj.data);
@@ -72,29 +63,44 @@ if (url.includes('/api/user/user-info')) {
   }
 }
 
-// 3. 所有 story-series → 解锁isVip
+// 3. story-series 所有接口 (card, browsing-history等)
 if (url.includes('/api/story-series/')) {
-  if (unlockVIP(obj.data)) modified = true;
+  // data是数组 (card, browsing-history)
+  if (Array.isArray(obj.data)) {
+    if (unlockVIPinArray(obj.data)) modified = true;
+  }
+  // data对象里嵌套数组
+  if (obj.data && typeof obj.data === 'object') {
+    for (const key of ['page', 'content', 'stories', 'items', 'list', 'records']) {
+      if (Array.isArray(obj.data[key])) {
+        if (unlockVIPinArray(obj.data[key])) modified = true;
+      }
+    }
+  }
 }
 
 // 4. distribution/summary → 金币
 if (url.includes('/api/distribution/summary')) {
-  if (obj.data) {
+  if (obj.data && typeof obj.data === 'object') {
     obj.data.flowCoins = 99999;
     modified = true;
     console.log('flowCoins → 99999');
   }
 }
 
-// 5. video-segments → 解锁课程视频片段
-if (url.includes('/api/video-segments/')) {
-  if (obj.data?.page?.content && Array.isArray(obj.data.page.content)) {
-    let c = 0;
-    for (const item of obj.data.page.content) {
-      if (item.isVip === true) { item.isVip = false; c++; }
-    }
-    if (c > 0) { modified = true; console.log(`video: 解锁 ${c} 个VIP片段`); }
+// 5. distribution/exchange/membership → 流币足够
+if (url.includes('/api/distribution/exchange/membership')) {
+  if (!obj.success) {
+    obj.code = 200;
+    obj.success = true;
+    obj.data = { flowCoins: 99999 };
+    obj.message = '操作成功';
+    modified = true;
+    console.log('exchange/membership → 伪造成功');
   }
 }
+
+// 6. video-segments → 内容无VIP限制 (确认没有isVip字段)
+// 但可以确保page.content正常返回
 
 $done({ body: JSON.stringify(obj) });
