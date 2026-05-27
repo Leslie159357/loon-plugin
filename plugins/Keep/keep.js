@@ -15,8 +15,9 @@ const url = $request.url;
 // ========== 字符串批量替换（全字段覆盖） ==========
 let modified = body;
 
-// 会员状态相关
+// 会员状态相关 — 通用无差别替换所有已知字段
 modified = modified.replace(/"memberStatus":\d+/g, '"memberStatus":1');
+modified = modified.replace(/"status":\w+/g, '"status":1');    // 所有status→1（包括未知字段）
 modified = modified.replace(/"buttonText":".*?"/g, '"buttonText":""');
 modified = modified.replace(/"hasPaid":\w+/g, '"hasPaid":true');
 modified = modified.replace(/"downLoadAll":\w+/g, '"downLoadAll":true');
@@ -28,16 +29,19 @@ modified = modified.replace(/"limitCount":\d/g, '"limitCount":0');
 modified = modified.replace(/"limitFreeType":"\w+/g, '"limitFreeType":""');
 modified = modified.replace(/"free":\w+/g, '"free":true');
 modified = modified.replace(/"member":\w+/g, '"member":true');
+modified = modified.replace(/":false/g, '":true');          // 所有:false→:true
 
 // 直播会员
 modified = modified.replace(/"userLiveMemberStatus":\w+/g, '"userLiveMemberStatus":1');
 modified = modified.replace(/"canWatchLive":\w+/g, '"canWatchLive":true');
 modified = modified.replace(/"userMemberAutoRenew":\w+/g, '"userMemberAutoRenew":true');
 modified = modified.replace(/"userUseLiveMemberRights":\w+/g, '"userUseLiveMemberRights":true');
+modified = modified.replace(/"userLiveMemberExpireTime":\d/g, '"userLiveMemberExpireTime":0');
 
 // 状态码
 modified = modified.replace(/"errorCode":\d+/g, '"errorCode":0');
 modified = modified.replace(/"code":\d+/g, '"code":200');
+modified = modified.replace(/"username":".*?"/g, '"username":"VIP"');
 
 // ========== 精确JSON字段替换（针对已知kprime接口） ==========
 try {
