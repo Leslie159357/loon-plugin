@@ -8,7 +8,8 @@
 #!tag=unlock
 
 [Script]
-http-response ^https:\/\/strategy\.baicizhan\.com\/api\/strategy\/get_member_info_page script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.js, requires-body=true, timeout=10, tag=BaiCiZhan-VIP
+http-response ^https?://strategy\.baicizhan\.com/api/strategy/get_member_info_page script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.js, requires-body=true, timeout=10, tag=baicizhan_vip
+http-response ^https?://learn\.baicizhan\.com/api/mall/proxy/virtual-currency/apple/get_user_ios_promotion_id_list script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.js, requires-body=true, timeout=10, tag=baicizhan_promo
 
 [MITM]
-hostname = strategy.baicizhan.com
+hostname = %APPEND% strategy.baicizhan.com, learn.baicizhan.com
