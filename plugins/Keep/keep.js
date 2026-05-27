@@ -201,14 +201,14 @@ let body = $response.body;
 
 // 1. 先检查是否匹配到完全伪造的接口
 for (let key in fakeResponses) {
-  if (url.indexOf(key) !== -1) {
+  if (url.indexOf(key) !== -1 || url.startsWith("https://api.gotokeep.com" + key)) {
     $done({ body: JSON.stringify(fakeResponses[key]) });
     return;
   }
 }
 
 // 2. 正则替换（仅对kprime/nuocha/guide/suit/janus接口）
-if (/api\.gotokeep\.com\/(kprime|nuocha|guide|suit|janus)/.test(url)) {
+if (body && /api\.gotokeep\.com\/(kprime|nuocha|guide|suit|janus)/.test(url)) {
   try {
     for (let rule of regexRules) {
       body = body.replace(rule.pattern, rule.replacement);
