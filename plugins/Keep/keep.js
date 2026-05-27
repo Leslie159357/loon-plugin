@@ -106,11 +106,7 @@ const fakeResponses = {
     errorCode: 0, text: "", data: true
   },
 
-  // 训练计划购买入口
-  "/kprime/v4/suit/sales/entrance": {
-    ok: true, errorCode: 0, text: null, moreInfo: null,
-    data: { generalMembershipInfo: { memberships: [] } }
-  },
+  // 训练计划购买入口 - 不做完整fake，走正则就行
 
   // 训练计划加入权限
   "/suit/v5/inJoin": {
