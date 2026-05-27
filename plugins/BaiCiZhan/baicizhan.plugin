@@ -1,0 +1,18 @@
+#!name=百词斩Pro会员解锁
+#!desc=解锁百词斩Pro会员，去广告
+#!author=Leslie
+#!home=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.plugin
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/68/74/47/687447ea-12f9-9f0f-d41a-2475891e2d86/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.png
+#!tag=unlock
+
+[Script]
+baicizhan_premium = type=http-response, pattern=^https:\/\/strategy\.baicizhan\.com\/api\/strategy\/get_member_info_page, requires-body=1, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.js, timeout=10
+
+baicizhan_order = type=http-response, pattern=^https:\/\/learn\.baicizhan\.com\/api\/mall\/proxy\/virtual-currency\/apple\/get_order_info, requires-body=0, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.js, timeout=10
+
+baicizhan_discount = type=http-response, pattern=^https:\/\/learn\.baicizhan\.com\/api\/mall\/proxy\/virtual-currency\/apple\/update_ios_user_discount_record, requires-body=0, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.js, timeout=10
+
+baicizhan_promotion = type=http-response, pattern=^https:\/\/learn\.baicizhan\.com\/api\/mall\/proxy\/virtual-currency\/apple\/get_user_ios_promotion_id_list, requires-body=1, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/BaiCiZhan/baicizhan.js, timeout=10
+
+[MITM]
+hostname = %APPEND% strategy.baicizhan.com, learn.baicizhan.com
