@@ -12,7 +12,6 @@
 | **DejaVocab** | — | 背单词 · VIP/语感网络/无限额度解锁 | [`DejaVocab.plugin`](plugins/DejaVocab/DejaVocab.plugin) |
 | **Memrise** | — | 多语言学习 · Pro 解锁，支持双斜杠路径 | [`memrise.plugin`](plugins/Memrise/memrise.plugin) |
 | **Duolingo** | — | 多邻国 · 无限宝石/课程解锁 | [`duolingo.plugin`](plugins/Duolingo/duolingo.plugin) |
-| **XunJi (已移除)** | `com.xunji.react.native.app` | ⛔ 训记 · 加密API验证无法破解，已移除 | — |
 | **FitRead** | — | 阅读 · VIP 解锁 | [`fitread.plugin`](plugins/FitRead/fitread.plugin) |
 | **EnglishDaily** | — | 英语天天练（ABC Zone）· VIP/SVIP 解锁 | [`english_daily.plugin`](plugins/EnglishDaily/english_daily.plugin) |
 | **ELSA Speak** | — | AI 英语口语教练 · Premium 解锁（课程/AI对话/角色扮演/宝石） | [`elsa.plugin`](plugins/ELSA-Speak/elsa.plugin) |
