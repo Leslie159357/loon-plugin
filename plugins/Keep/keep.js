@@ -55,7 +55,9 @@ function unlockBody(body) {
     .replace(/"primeStatus":"expired"/g, '"primeStatus":"in_effect"')
     .replace(/"primeStatus":"none"/g, '"primeStatus":"in_effect"')
     .replace(/"membership_status":"expired"/g, '"membership_status":"active"')
-    .replace(/"memberStatus":\d+/g, '"memberStatus":1')
+    .replace(/"memberStatus":3/g, '"memberStatus":1')
+    .replace(/"memberStatus":2/g, '"memberStatus":1')
+    .replace(/"memberStatus":0/g, '"memberStatus":1')
     // 自动续费
     .replace(/"autoRenew":false/g, '"autoRenew":true')
     .replace(/"autoRenew":null/g, '"autoRenew":true')
