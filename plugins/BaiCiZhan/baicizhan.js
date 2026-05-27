@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name         BaiCiZhan Premium Unlock
-// @version      1.0.0
-// @description  百词斩Pro会员解锁
+// @version      1.1.0
+// @description  百词斩Pro会员解锁 - 过期时间改2099+铜板改99999
 // @author       Leslie
 // @license      MIT
 // ==/UserScript==
 
 var url = $request.url;
 var body = $response.body;
-var status = $response.status;
 
 // ========== 会员信息页面 ==========
 if (url.indexOf('/api/strategy/get_member_info_page') !== -1) {
@@ -16,21 +15,31 @@ if (url.indexOf('/api/strategy/get_member_info_page') !== -1) {
     try {
       var obj = JSON.parse(body);
       if (obj.data) {
+        // 改付费状态
         obj.data.payed = true;
+        
+        // 改会员信息 - 无论null还是已有都改
         if (obj.data.userVipInfo === null) {
           obj.data.userVipInfo = {
-            "memberType": 16,
-            "memberTypeName": "Pro年度会员",
-            "startTime": 1779885528000,
-            "endTime": 4102444800000,
-            "autoRenewal": 1,
-            "level": 2,
-            "status": 1,
-            "origin": 1
+            "entitlementKey": "bcz.app.vip.v1",
+            "memberLevel": 2,
+            "expireTime": 4102444800000,
+            "maxValue": 99999,
+            "currentValue": 99999,
+            "nextRecoveryTime": null,
+            "nextRecoveryAmount": null,
+            "recoveryInterval": null
           };
+        } else {
+          obj.data.userVipInfo.expireTime = 4102444800000;
+          obj.data.userVipInfo.memberLevel = 2;
+          obj.data.userVipInfo.maxValue = 99999;
+          obj.data.userVipInfo.currentValue = 99999;
         }
-        obj.data.getMonthCreditReward = true;
+        
+        // 改铜板
         obj.data.creditNum = 99999;
+        obj.data.getMonthCreditReward = true;
         obj.data.getTodayReward = true;
         obj.data.todayRewardList = [{"type": 1, "value": 100, "desc": "Pro会员每日积分奖励"}];
         
@@ -53,52 +62,11 @@ if (url.indexOf('/api/strategy/get_member_info_page') !== -1) {
       }
       $done({body: JSON.stringify(obj)});
     } catch (e) {
-      console.log('baicizhan: JSON parse error - ' + e);
       $done({});
     }
   } else {
     $done({});
   }
-  return;
-}
-
-// ========== 商城 - 订单信息 ==========
-if (url.indexOf('/api/mall/proxy/virtual-currency/apple/get_order_info') !== -1) {
-  // 保持原响应，App需要真实Apple IAP信息才能发起支付
-  $done({});
-  return;
-}
-
-// ========== 商城 - 更新优惠记录 ==========
-if (url.indexOf('/api/mall/proxy/virtual-currency/apple/update_ios_user_discount_record') !== -1) {
-  // 保持，让App认为优惠已更新
-  $done({});
-  return;
-}
-
-// ========== 商城 - 用户优惠列表 ==========
-if (url.indexOf('/api/mall/proxy/virtual-currency/apple/get_user_ios_promotion_id_list') !== -1) {
-  if (body) {
-    try {
-      var obj = JSON.parse(body);
-      if (obj.data) {
-        // 延长所有优惠到可用状态
-        // 保持原样，这是可见的优惠列表
-      }
-      $done({body: JSON.stringify(obj)});
-    } catch (e) {
-      $done({});
-    }
-  } else {
-    $done({});
-  }
-  return;
-}
-
-// ========== get_user_study_config ==========
-// 学习配置
-if (url.indexOf('/rpc/user_study/get_user_study_config') !== -1) {
-  $done({});  // 保持原样，Thrift协议不可改
   return;
 }
 
