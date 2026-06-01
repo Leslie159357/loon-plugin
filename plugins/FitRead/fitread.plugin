@@ -2,7 +2,6 @@
 #!desc=修改 CurrentUser 响应中的 isVip 字段，解锁 FitRead 全部VIP功能
 #!author=Minis
 #!tag=解锁,教育
-#!system=ios
 
 [Script]
 http-response ^https?:\/\/api\.fitread\.cn\/api\/User\/CurrentUser script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FitRead/fitread_vip.js, requires-body=true, tag=FitRead VIP解锁
