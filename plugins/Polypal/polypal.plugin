@@ -1,0 +1,19 @@
+#!name=Polypal 会员解锁
+#!desc=解锁 Polypal / Live Translator VIP 会员 - 无限翻译时长 + 高级功能解锁
+#!author=Minis
+#!home=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/Polypal
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2e/79/b3/2e79b354-184a-081f-b8cb-e5ed3ac228ec/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.png
+#!date=2026-06-07
+#!tag=unlock,翻译,工具
+
+[Script]
+http-response ^https?:\/\/api-jp\.timekettle\.co\/livetranslator\/app\/benefit\/user_plan\/current$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Polypal/polypal.js, requires-body=true, timeout=10, tag=Polypal 订阅计划
+
+http-response ^https?:\/\/api-jp\.timekettle\.co\/livetranslator\/app\/user\/duration\/remain$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Polypal/polypal.js, requires-body=true, timeout=10, tag=Polypal 剩余时长
+
+http-response ^https?:\/\/api-jp\.timekettle\.co\/polypal-ai\/app\/image\/benefit$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Polypal/polypal.js, requires-body=true, timeout=10, tag=Polypal 图片翻译
+
+http-response ^https?:\/\/api-jp\.timekettle\.co\/livetranslator\/app\/document\/si\/recording\/storage$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Polypal/polypal.js, requires-body=true, timeout=10, tag=Polypal 存储空间
+
+[MITM]
+hostname = %APPEND% api-jp.timekettle.co
