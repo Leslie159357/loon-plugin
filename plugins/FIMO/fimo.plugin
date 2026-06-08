@@ -9,11 +9,13 @@
 [Script]
 http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-user\/user$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 用户VIP(核心)
 
-http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-user\/user\/sync script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 用户同步
+http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-user\/user\/sync$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 用户同步
 
 http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-user\/user\/online script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 在线状态
 
-http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/film script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 胶卷列表
+http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/film$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 胶卷列表
+
+http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/filmAll script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 全部胶卷
 
 http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/subscribeConfig$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 订阅配置
 
@@ -23,7 +25,7 @@ http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/apple\/certificate$ s
 
 http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/apple\/purchase$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 购买处理
 
-http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/config script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 配置
+http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/config$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 配置
 
 http-response ^https?:\/\/fimo\.appfimo\.com\/fimo-common\/startPopConfig script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/FIMO/fimo.js, requires-body=true, timeout=10, tag=FIMO 启动弹窗
 
