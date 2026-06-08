@@ -1,0 +1,17 @@
+#!name=单词鸭 Pro (TomatoWord)
+#!desc=单词鸭 VIP解锁 + 无限金币
+#!author=Minis
+#!home=https://t.me/duolingo_crack
+
+[General]
+skip-proxy = 10.0.0.0/8, 127.0.0.1, localhost, *.local
+
+[Script]
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/user/getInfor script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck.js, requires-body=true, timeout=30, tag=单词鸭VIP
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/getPayConfig script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck.js, requires-body=true, timeout=30, tag=单词鸭支付
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/user/.* script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck.js, requires-body=true, timeout=30, tag=单词鸭用户
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/pay/.* script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck.js, requires-body=true, timeout=30, tag=单词鸭支付
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/.* script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck.js, requires-body=true, timeout=30, tag=单词鸭通用
+
+[MITM]
+hostname = zhcn.api.wordln.com, api.wordln.com, wordln.com

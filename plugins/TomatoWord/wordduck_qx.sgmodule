@@ -1,0 +1,13 @@
+# 单词鸭 Pro (TomatoWord) — Quantumult X 模块
+# 作者: Minis
+# 说明: 单词鸭 VIP解锁 + 无限金币
+
+[Script]
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/user/getInfor requires-body=true, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck_qx.js, tag=单词鸭VIP
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/getPayConfig requires-body=true, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck_qx.js, tag=单词鸭支付
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/user/.* requires-body=true, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck_qx.js, tag=单词鸭用户
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/pay/.* requires-body=true, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck_qx.js, tag=单词鸭支付
+http-response ^https?://zhcn\.api\.wordln\.com/tomato-word/.* requires-body=true, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TomatoWord/wordduck_qx.js, tag=单词鸭通用
+
+[MITM]
+hostname = %APPEND% zhcn.api.wordln.com
