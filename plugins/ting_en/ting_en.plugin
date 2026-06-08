@@ -1,0 +1,27 @@
+#!name=TingEn VIP Unlock
+#!desc=每日英语听力永久VIP解锁（欧路词典）
+#!author=Minis
+#!homepage=https://github.com/Leslie159357/Loon-Plugins
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/10/6c/c6/106cc6de-9f78-ec6b-f5df-c09c0ac226e3/AppIcon-1x_U007emarketing-0-7-0-P3-85-220-0.png/246x0w.webp
+
+[Script]
+http-response ^https://api\.eudic\.net/api/v5/ting/EicoHomePage$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 首页VIP
+http-response ^https://api\.eudic\.net/api/v5/user/profile$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 用户VIP
+http-response ^https://api\.eudic\.net/api/v5/user/gold$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 金币
+http-response ^https://api\.eudic\.net/api/v5/ting/homepage$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 首页
+http-response ^https://api\.eudic\.net/api/v5/ting/WaikanHomePage script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 外刊
+http-response ^https://api\.eudic\.net/api/v5/ting/eicocoursehomepage script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 课程
+http-response ^https://api\.eudic\.net/api/v5/ting/eicojingtinghomepage script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 精听
+http-response ^https://api\.eudic\.net/api/v5/ting/podcasthomepage script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 播客
+http-response ^https://api\.eudic\.net/api/v5/ting/dubbing/homepage script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 配音
+http-response ^https://api\.eudic\.net/api/v5/knowledgecircle/homepage script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 知识圈
+http-response ^https://api\.eudic\.net/api/v5/live/Get script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 直播
+http-response ^https://api\.eudic\.net/api/v5/ai/profile$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - AI
+http-response ^https://cn\.eudic\.net/payment script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 支付
+http-response ^https://cn\.eudic\.net/auth/UserInfo script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 用户信息
+http-response ^https://api\.frdic\.com/api/v2/appsupport/StartupConfig script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 启动配置
+http-response ^https://api\.frdic\.com/api/v2/appsupport/IapProductList script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 内购列表
+http-response ^https://api\.frdic\.com/api/v2/appsupport/RecommendProducts script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, timeout=10, tag=每日英语听力 - 推荐商品
+
+[Mitm]
+hostname = api.eudic.net, cn.eudic.net, api.frdic.com
