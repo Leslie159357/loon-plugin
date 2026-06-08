@@ -1,11 +1,16 @@
-# 瓜瓜跟读 Loon 插件
+# 瓜瓜跟读 Loon 插件 v2.0
 # Bundle ID: com.muyi.linguagua
 # API: api.lgg.oranglish.com
-# 版本: 1.0
 
 [Script]
 # 用户信息 - 注入会员状态
 http-response ^https?://api\.lgg\.oranglish\.com/user/info script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-用户信息
+
+# 统计 - 小红花无限
+http-response ^https?://api\.lgg\.oranglish\.com/stats/user script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-小红花无限
+
+# 导入文章 - 不消耗小红花
+http-response ^https?://api\.lgg\.oranglish\.com/article/check-flower-for-import script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-检查导入消耗
 
 # 收据验证 - 返回成功
 http-response ^https?://api\.lgg\.oranglish\.com/membership/verify/apple/receipt script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-收据验证
