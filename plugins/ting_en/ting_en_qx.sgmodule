@@ -1,0 +1,22 @@
+#!name=每日英语听力 ting_en 永久VIP解锁 v1.0
+#!desc=每日英语听力永久VIP + 翻译VIP + 金币99999 + 无限制使用
+#!author=Minis
+#!homepage=https://github.com/Leslie159357
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/10/6c/c6/106cc6de-9f78-ec6b-f5df-c09c0ac226e3/AppIcon-1x_U007emarketing-0-7-0-P3-85-220-0.png/246x0w.webp
+#!tag=教育,解锁,英语,听力
+#!system=ios
+#!date=2026-06-08
+#!version=1.0
+
+[MITM]
+hostname = api.eudic.net, cn.eudic.net, api.frdic.com
+
+[Script]
+# 响应拦截 - api.eudic.net 所有API
+http-response ^https:\/\/api\.eudic\.net script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, max-size=200000, tag=每日英语听力 API
+
+# 响应拦截 - cn.eudic.net 支付/认证
+http-response ^https:\/\/cn\.eudic\.net script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, tag=每日英语听力 支付
+
+# 响应拦截 - api.frdic.com 配置
+http-response ^https:\/\/api\.frdic\.com script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ting_en/ting_en_qx.js, requires-body=true, tag=每日英语听力 配置
