@@ -87,7 +87,9 @@ try {
     console.log('GetNotes: /voicenotes/web/user/info -> VIP unlocked');
   }
 
-  // 3. notes-api.biji.com: /shop/app/v1/vipcards/user
+  // 3. dmind.luojilab.com + notes-api.biji.com: /vipcards/user (两个域名都用)
+  //    /shop/mind/app/v1/vipcards/user (dmind)
+  //    /shop/app/v1/vipcards/user (notes-api)
   //    返回: {"h":{...},"c":{"user":{...},"vip_info":{...}}}
   if (url.indexOf('/vipcards/user') !== -1) {
     if (obj.c && obj.c.vip_info) {
@@ -111,25 +113,29 @@ try {
   }
 
   // 4. notes-api.biji.com: /shop/app/v1/vipcards (列表)
+  //    实际结构: {"h":{},"c":{"cards":[{...},...]}}
   if (url.indexOf('/shop/app/v1/vipcards') !== -1 && url.indexOf('/user') === -1) {
-    if (obj.c && Array.isArray(obj.c)) {
-      // 所有商品标记为已购买
-      obj.c.forEach(function(card) {
+    if (obj.c && obj.c.cards && Array.isArray(obj.c.cards)) {
+      obj.c.cards.forEach(function(card) {
         card.is_purchased = true;
         card.is_bought = true;
-        card.eligibility_rule = null;
-        card.price = 0;
+        card.available_buy = false;
+        card.price = "0.00";
+        card.display_price = "0";
+        card.origin_price = "0.00";
       });
     }
     console.log('GetNotes: /vipcards -> all purchased');
   }
 
   // 5. notes-api.biji.com: /shop/app/v1/maxcards
+  //    实际结构: {"h":{},"c":{"cards":[{...},...]}}
   if (url.indexOf('/shop/app/v1/maxcards') !== -1) {
-    if (obj.c && Array.isArray(obj.c)) {
-      obj.c.forEach(function(card) {
+    if (obj.c && obj.c.cards && Array.isArray(obj.c.cards)) {
+      obj.c.cards.forEach(function(card) {
         card.is_purchased = true;
-        card.price = 0;
+        card.price = "0.00";
+        card.available_buy = false;
       });
     }
     console.log('GetNotes: /maxcards -> all purchased');
