@@ -1,0 +1,13 @@
+#!name=墨墨记忆卡 专业版解锁 (QX)
+#!desc=解锁墨墨记忆卡专业版所有功能 - Quantumult X 版本
+#!author=Minis
+#!home=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/Markji
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/86/20/1f/86201fdf-27f5-b2b9-14e5-56ad5784fee9/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.png
+#!date=2026-06-08
+#!tag=unlock,学习,记忆,卡片
+
+[rewrite_local]
+^https:\/\/www\.markji\.com\/api\/v2\/system\/check url script-response-body https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Markji/markji_qx.js
+
+[MITM]
+hostname = www.markji.com
