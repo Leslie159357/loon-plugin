@@ -1,25 +1,20 @@
-#!name=英语天天练 VIP解锁
-#!desc=解锁英语天天练（ABCzone）全部VIP/SVIP会员功能。覆盖app.chuangjing.com/api.xueersi.com/bookapp.xueersibook.com三大域名，递归修改所有VIP字段。
+#!name=英语天天练 VIP/SVIP全解锁
+#!desc=解锁英语天天练（ABCzone）全部VIP/SVIP功能。Flutter主API + 学而思基础 + 认证域名全覆盖。
 #!author=Leslie159357
 #!home=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/ABCzone
 #!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/e7/3a/c4/e73ac420-56bb-1814-c311-94a6e7cf456f/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.png
 #!tag=unlock,教育,英语,学而思
 #!system=ios
 #!date=2026-06-08
-#!version=1.0
+#!version=1.1
 
 [MITM]
-hostname = %APPEND% app.chuangjing.com, api.xueersi.com, bookapp.xueersibook.com
+hostname = %APPEND% app.chuangjing.com, api.xueersi.com, bookapp.xueersibook.com, passport.100tal.com, passport.vdyoo.com, api.xesvip.cn
 
 [Script]
 http-response ^https:\/\/app\.chuangjing\.com script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ABCzone/abczone_qx.js, requires-body=true, timeout=15, tag=ABCzone Flutter业务
 http-response ^https:\/\/api\.xueersi\.com script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ABCzone/abczone_qx.js, requires-body=true, timeout=15, tag=ABCzone 学而思基础
 http-response ^https:\/\/bookapp\.xueersibook\.com script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ABCzone/abczone_qx.js, requires-body=true, timeout=15, tag=ABCzone 图书服务
-
-[MITM]
-hostname = %APPEND% passport.100tal.com, passport.vdyoo.com, api.xesvip.cn
-
-[Script]
 http-response ^https:\/\/passport\.100tal\.com script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ABCzone/abczone_qx.js, requires-body=true, timeout=15, tag=ABCzone 认证
 http-response ^https:\/\/passport\.vdyoo\.com script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ABCzone/abczone_qx.js, requires-body=true, timeout=15, tag=ABCzone 认证备用
 http-response ^https:\/\/api\.xesvip\.cn script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/ABCzone/abczone_qx.js, requires-body=true, timeout=15, tag=ABCzone 会员辅助
