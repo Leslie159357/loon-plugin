@@ -1,0 +1,20 @@
+# 瓜瓜跟读 Loon 插件
+# Bundle ID: com.muyi.linguagua
+# API: api.lgg.oranglish.com
+# 版本: 1.0
+
+[Script]
+# 用户信息 - 注入会员状态
+http-response ^https?://api\.lgg\.oranglish\.com/user/info script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-用户信息
+
+# 收据验证 - 返回成功
+http-response ^https?://api\.lgg\.oranglish\.com/membership/verify/apple/receipt script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-收据验证
+
+# 兑换码 - 返回成功
+http-response ^https?://api\.lgg\.oranglish\.com/membership/exchange script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-兑换码
+
+# Token刷新 - 延长有效期
+http-response ^https?://api\.lgg\.oranglish\.com/refresh/token script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Linguagua/linguagua_crack.js, requires-body=true, timeout=10, tag=瓜瓜跟读-Token刷新
+
+[MITM]
+hostname = %APPEND% api.lgg.oranglish.com
