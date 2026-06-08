@@ -1,10 +1,17 @@
-// 墨墨记忆卡 专业版解锁 v1.1
-// Quantumult X 版本
-// 拦截 www.markji.com/api/v2/system/check
-// 修改响应 - 解锁专业版所有功能
+// ==Quantumult X==
+// @name         墨墨记忆卡 专业版解锁 v1.1
+// @description  解锁墨墨记忆卡专业版所有功能 - 修改 /api/v2/system/check 响应
+// @version      1.1
+// @author       Minis
+// @icon         https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/86/20/1f/86201fdf-27f5-b2b9-14e5-56ad5784fee9/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.png
+// ==/Quantumult X==
 
 var url = $request.url;
 var body = $response.body;
+
+if (typeof $response === 'undefined') {
+    $done({});
+}
 
 if (!body) {
     $done({});
