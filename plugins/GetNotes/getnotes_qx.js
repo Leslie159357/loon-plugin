@@ -1,5 +1,5 @@
 // ==CloakNote==
-// 得到大脑 GetNotes VIP 解锁 v2.0
+// 得到大脑 GetNotes VIP 解锁 v2.1
 // Quantumult X 脚本
 // 拦截: dmind.luojilab.com + notes-api.biji.com + get-notes.luojilab.com
 // 基于实际抓包数据结构重写
