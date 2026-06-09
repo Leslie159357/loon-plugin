@@ -117,6 +117,11 @@ function unlockVIP(obj, path = '') {
                 obj[key] = 1;
                 log.push(`BuySource: ${fullPath} = ${val} → 1`);
             }
+        } else if (lowerKey === 'schema' || lowerKey === 'scheme' || lowerKey.includes('schema_url')) {
+            if (val && typeof val === 'string' && val.includes('buyVIP')) {
+                obj[key] = '';
+                log.push(`Schema: ${fullPath} 已清空(buyVIP跳转)`);
+            }
         }
         
         if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -227,11 +232,26 @@ if (url.includes('/basicsapi/v1/vip/detail') || url.includes('/v1/vip/detail')) 
     log.push('🎯 ObjC VIP Detail 命中');
 }
 
-// 10. 对于剑桥等独立课程接口 — 如果有单独的学习数据接口
+// 10. 对于剑桥等独立课程接口
 if (url.includes('/abc-api/v3/book-article/') || url.includes('/abc-api/v3/learn/')) {
     if (body.data) {
         body.data.is_vip = true;
         body.data.is_svip = true;
+    }
+}
+
+// 11. camb/get-practice-list — 剑桥情景对话，清空所有 buyVIP schema
+if (url.includes('/abc-api/v3/camb/get-practice-list') && body.data) {
+    const themes = body.data.theme_list || [];
+    for (const t of themes) {
+        if (t.list && Array.isArray(t.list)) {
+            for (const p of t.list) {
+                if (p.schema && p.schema.includes('buyVIP')) {
+                    p.schema = '';
+                    log.push(`🎯 camb: 清空plan "${p.plan_name}" 的 buyVIP schema`);
+                }
+            }
+        }
     }
 }
 
