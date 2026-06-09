@@ -141,11 +141,14 @@ if (url.includes('/abc-api/v3/book/get-user-level-list') && body.data) {
     log.push('🎯 /abc-api/v3/book/get-user-level-list → vip_status=3');
 }
 
-// 3. /abc-api/v3/hello/get-level-list
+// 3. /abc-api/v3/hello/get-level-list — 同时清空 vip_button 防止弹窗
 if (url.includes('/abc-api/v3/hello/get-level-list') && body.data) {
     if (body.data.vip_status !== undefined) body.data.vip_status = 3;
     if (body.data.svip_status !== undefined) body.data.svip_status = 1;
-    log.push('🎯 /abc-api/v3/hello/get-level-list → vip_status=3, svip_status=1');
+    body.data.vip_button = false;
+    body.data.vip_schema_url = '';
+    body.data.vip_button_img = '';
+    log.push('🎯 /abc-api/v3/hello/get-level-list → vip_status=3, svip_status=1, vip_button=false');
 }
 
 // 4. /abc-api/v3/pay/order-confirm
@@ -165,7 +168,12 @@ if (url.includes('/abc-api/v3/pay/order-confirm')) {
         // 直接把 svip_goods_list 设为空数组，取消所有单项商品的展示
         body.data.svip_goods_list = [];
         body.data.goods_list = [];
-        log.push('🎯 /abc-api/v3/pay/order-confirm → has_bought=true, 到期时间=2099, 隐藏商品列表');
+        body.data.union_goods_list = [];
+        // 隐藏会员权益介绍（含剑桥广告）
+        body.data.membership_privileges = [];
+        // 清空父评
+        body.data.parent_comment = {};
+        log.push('🎯 /abc-api/v3/pay/order-confirm → has_bought=true, 到期时间=2099, 所有商品列表已清空');
     }
 }
 
@@ -187,7 +195,11 @@ if (url.includes('/abc-api/v3/pay/get-user-data') && body.data) {
     body.data.order_hidden = true;
     body.data.vip_end_uts = 4092599349000;
     body.data.svip_end_uts = 4092599349000;
-    log.push('🎯 /abc-api/v3/pay/get-user-data → vip_hidden=true, 到期时间=2099');
+    body.data.vip_days = 36500;
+    // 清空弹窗信息，防止 App 弹出开通会员弹窗
+    body.data.popup_info = {};
+    body.data.vip_button_desc = '';
+    log.push('🎯 /abc-api/v3/pay/get-user-data → vip_hidden=true, 到期时间=2099, 弹窗已清除');
 }
 
 // 8. /abc-api/v3/common/get-user-info
