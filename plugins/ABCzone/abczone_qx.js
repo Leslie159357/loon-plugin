@@ -148,7 +148,21 @@ if (url.includes('/abc-api/v3/hello/get-level-list') && body.data) {
     body.data.vip_button = false;
     body.data.vip_schema_url = '';
     body.data.vip_button_img = '';
-    log.push('🎯 /abc-api/v3/hello/get-level-list → vip_status=3, svip_status=1, vip_button=false');
+    // 关键修复：module_list 中的 module_status=12 表示 SVIP 锁定
+    // 设为 0（可访问）并清空购买跳转链接和 SVIP 图标
+    if (body.data.module_list && Array.isArray(body.data.module_list)) {
+        for (let i = 0; i < body.data.module_list.length; i++) {
+            const m = body.data.module_list[i];
+            if (m.module_status === 12) {
+                m.module_status = 0;
+                m.module_status_img = '';
+                m.scheme = '';
+                m.button_text = '';
+                log.push(`🎯 module_list[${i}]: module_status=12→0, scheme已清空`);
+            }
+        }
+    }
+    log.push('🎯 /abc-api/v3/hello/get-level-list → vip_status=3, svip_status=1, vip_button=false, module_status修复');
 }
 
 // 4. /abc-api/v3/pay/order-confirm
@@ -196,6 +210,7 @@ if (url.includes('/abc-api/v3/pay/get-user-data') && body.data) {
     body.data.vip_end_uts = 4092599349000;
     body.data.svip_end_uts = 4092599349000;
     body.data.vip_days = 36500;
+    body.data.vip_scheme = '';
     // 清空弹窗信息，防止 App 弹出开通会员弹窗
     body.data.popup_info = {};
     body.data.vip_button_desc = '';
