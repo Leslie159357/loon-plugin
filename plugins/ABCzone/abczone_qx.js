@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ABCzone (英语天天练) 会员解锁 v2.1
 // @namespace    https://github.com/Leslie159357/Loon-Plugins
-// @version      2.1
+// @version      2.2
 // @description  破解学而思英语天天练 VIP/SVIP + 剑桥收费 — 基于实际抓包数据修复
 // @author       Leslie159357
 // @mitm         app.chuangjing.com, api.xueersi.com, bookapp.xueersibook.com, api.xesvip.cn
