@@ -1,14 +1,14 @@
 #!META
 {
-  "name": "YouMind Pro Unlock",
-  "version": "1.0",
-  "desc": "解锁 YouMind Pro/Premium 会员、积分余额",
-  "icon": "https://cdn.gooo.ai/assets/material-text.png"
+  "name": "YouMind Pro Unlock v2.0",
+  "version": "2.0",
+  "desc": "解锁 YouMind Pro 会员 - 基于实际抓包数据（hello-lucy.com）",
+  "icon": "https://cdn.hello-lucy.com/web-images/eced863065b5129b7ff3473ab13846162380cc0fdcfc205700163702f6925470@chat"
 }
 #!META
 
 [MITM]
-hostname = %APPEND% clawhub.ai
+hostname = %APPEND% hello-lucy.com
 
 [Script]
-http-response ^https?://clawhub\.ai/api/v1/(getCurrentUser|subscription/verifyTransaction|credit/getCreditAccount|credit/getTotalBonusRedeem|credit/listCreditsConsumeTransactionsInCurrentPeriod|credit/listPermanentCreditGrants|user/) script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.js, requires-body = true, tag = YouMind Pro Unlock
+http-response ^https?://hello-lucy\.com/api/v1/(getCurrentUser|subscription/findSubscription|credit/getCreditAccount|credit/getTotalBonusRedeem|credit/listCreditsConsumeTransactionsInCurrentPeriod|credit/listPermanentCreditGrants) script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.js, requires-body = true, tag = YouMind Pro Unlock v2

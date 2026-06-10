@@ -1,32 +1,37 @@
-# YouMind (com.mindbicycle.YouMind) MITM Scripts
+# YouMind (com.mindbicycle.YouMind) MITM Script v2.0
 
-## QX 模块安装链接
+## 基于实际抓包数据修正
+App 实际 API 域名是 **hello-lucy.com**（**不是** clawhub.ai）
+
+## 安装链接
+**QX 模块:**
 ```
 https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.sgmodule
 ```
-
-## Loon 插件安装链接
+**Loon 插件:**
 ```
 https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind.plugin
 ```
 
 ## MITM 域名
-clawhub.ai
+`hello-lucy.com`
 
-## 功能
-- ✅ 解锁 Pro/Premium 会员
-- ✅ 积分余额修改
-- ✅ 订阅状态改为活跃
-- ✅ 到期时间改为 2099 年
-- ✅ 递归泛匹配所有 VIP 字段
+## 抓包验证的接口
+| 接口 | 修改内容 |
+|------|---------|
+| `/api/v1/getCurrentUser` | `space.status: "trialing" → "active"`，`trialExpiresAt → 2099` |
+| `/api/v1/credit/getCreditAccount` | `productTier: "free" → "pro"`, `subTier: 1 → 999`, 积分余额→999999 |
+| `/api/v1/subscription/findSubscription` | 强制返回有效订阅 |
 
-## 使用方法
+## 使用说明
 1. 安装模块/插件
-2. 确保 MitM 已开启，域名 clawhub.ai 已添加
-3. 杀掉 App 重新打开
+2. 开启 MitM，确保 `hello-lucy.com` 在 MITM 主机名列表
+3. **杀掉 App → 重新打开**（清除本地缓存）
 
-## 注意
-This is a React Native (Expo SDK 55 + Hermes) App.
-All network requests go through clawhub.ai.
-JS bundle is Hermes bytecode (non-modifiable directly).
-No RevenueCat dependency - self-owned paywall system.
+## v1.0 → v2.0 变更
+- ✅ 修复域名：`clawhub.ai` → `hello-lucy.com`
+- ✅ 基于实际抓包 JSON 结构精准匹配字段
+- ✅ 新增 `subscription/findSubscription` 接口处理
+- ✅ 新增 `hasEverHadSubscription` 字段强制 true
+- ✅ 新增 `productTier` 强制 pro
+- ✅ 修复时间戳字段匹配

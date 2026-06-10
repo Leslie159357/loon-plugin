@@ -1,8 +1,5 @@
 [MITM]
-hostname = clawhub.ai
+hostname = hello-lucy.com
 
 [Script]
-http-response ^https?://clawhub\.ai/api/v1/getCurrentUser requires-body = 1, script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.js, tag = YouMind Pro Unlock
-
-[Sni]
-47.89.18.164
+http-response ^https?://hello-lucy\.com/api/v1/(getCurrentUser|subscription/findSubscription|credit/getCreditAccount|credit/getTotalBonusRedeem|credit/listCreditsConsumeTransactionsInCurrentPeriod|credit/listPermanentCreditGrants) requires-body = 1, script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.js, tag = YouMind Pro Unlock v2
