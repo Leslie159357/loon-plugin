@@ -1,8 +1,8 @@
 #!META
 {
-  "name": "YouMind Pro Unlock v2.1",
-  "version": "2.1",
-  "desc": "解锁 YouMind Pro 会员 - 基于抓包数据，支持 snake_case + camelCase 双格式",
+  "name": "YouMind Max Unlock v3.0",
+  "version": "3.0",
+  "desc": "productTier→max, 技能免费安装, 积分全满",
   "icon": "https://cdn.hello-lucy.com/web-images/a8bcbb846678ff2ac2a50e49ec03feee0fc30f2ff26dc15bf3156fe136c15e8d@chat"
 }
 #!META
@@ -11,5 +11,5 @@
 hostname = %APPEND% hello-lucy.com
 
 [Script]
-// YouMind Pro Unlock v2.1
-http-response https?://hello-lucy\.com/api/v1/(getCurrentUser|subscription/findSubscription|credit/getCreditAccount) requires-body = 1, tag = YouMind Pro Unlock v2.1, script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.js
+// YouMind Max Unlock v3.0
+http-response https?://hello-lucy\.com/api/v1/(getCurrentUser|subscription/findSubscription|credit/getCreditAccount|getSkill|installSkill|listInstalledSkills|listSkillsV2|listFeaturedSkills|listMonthlyTopSkills|getTotalBonusRedeem|listPermanentCreditGrants|listCreditsConsumeTransactionsInCurrentPeriod) requires-body = 1, tag = YouMind Max Unlock v3, script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.js
