@@ -2,7 +2,7 @@
 resource_parser_url = https://raw.githubusercontent.com/KOP-XDC/Quantumult-X-Resource-Script Format/master/parser.js
 
 [Script]
-http-response ^https?://clawhub\.ai/api/v1/(getCurrentUser|subscription/verifyTransaction|credit/getCreditAccount|credit/getTotalBonusRedeem|credit/listCreditsConsumeTransactionsInCurrentPeriod|credit/listPermanentCreditGrants|user/) requires-body = 1, tag = YouMind Pro Unlock, script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/YouMind/youmind_qx.js
+http-response ^https?://clawhub\.ai/api/v1/(getCurrentUser|subscription/verifyTransaction|credit/getCreditAccount|credit/getTotalBonusRedeem|credit/listCreditsConsumeTransactionsInCurrentPeriod|credit/listPermanentCreditGrants|user/) requires-body = 1, tag = YouMind Pro Unlock, script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.js
 
 [MITM]
 hostname = clawhub.ai

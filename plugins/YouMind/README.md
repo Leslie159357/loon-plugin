@@ -2,12 +2,12 @@
 
 ## QX 模块安装链接
 ```
-https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/YouMind/youmind_qx.sgmodule
+https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind_qx.sgmodule
 ```
 
 ## Loon 插件安装链接
 ```
-https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/YouMind/youmind.plugin
+https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/refs/heads/master/plugins/YouMind/youmind.plugin
 ```
 
 ## MITM 域名
