@@ -11,19 +11,17 @@
 | 付费系统 | RevenueCat + 自建后端 |
 | ATS | ✅ NSAllowsArbitraryLoads = true，无 SSL Pinning |
 
-## 插件功能
+## 插件功能（v1.1 - 基于实际抓包修复）
 
-- ✅ **Pro 永久会员** — isProPermanentMember → true
-- ✅ **基础永久会员** — isBasicPermanentMember → true
-- ✅ **标准月付/年付** — isOneMonthMember, isOneYearMember → true
-- ✅ **订阅状态** — isSubscribed → true, needSubscribe → false
-- ✅ **积分/额度** — permanentNumber, points, balance → 999999
-- ✅ **字幕权限** — check-can-use-transcript, check-batch-transcript-member → true
-- ✅ **积分检查** — check-points-limit-enough → true
-- ✅ **功能对比** — feature-comparison 所有功能解锁
-- ✅ **商品目录** — purchase-catalog 所有商品已购
-- ✅ **会员计划** — memberPlan → pro_permanent
-- ✅ **隐藏永久会员弹窗** — showPermanentMember → false
+- ✅ **Pro 永久会员** — isPro=true, isProPermanentMember=true
+- ✅ **基础永久/月付/年付** — 全部解锁
+- ✅ **积分无限** — pointsLimit=999999, pointsMonthlyGrant=999999
+- ✅ **已用积分归零** — pointsUsed=0, pointsFrozen=0
+- ✅ **翻译/功能额度** — timeLimit=999999, tokenLimit=999999
+- ✅ **检查权限** — check-can-use-transcript, check-points-limit-enough → true
+- ✅ **到期时间** — 全部改为 2099-12-31
+- ✅ **entitlement** — free → pro
+- ✅ **商品价格** — purchase-catalog 所有商品价格改为0
 
 ## 拦截域名
 
@@ -33,28 +31,41 @@
 
 ### Quantumult X
 
-1. 复制模块链接：`https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TingDianDian/tingdiandian_qx.sgmodule`
-2. Quantumult X → 右下角三图标 → 模块 → 右上角➕ → 粘贴链接 → 确定
-3. 确保 MitM 已开启
-4. 在 MitM → 主机名 中确认已包含 `api.tingdiandian.com`
+```
+https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TingDianDian/tingdiandian_qx.sgmodule
+```
+
+1. Quantumult X → 右下角三图标 → 模块 → 右上角➕ → 粘贴链接 → 确定
+2. 确保 MitM 已开启
+3. 在 MitM → 主机名 中确认已包含 `api.tingdiandian.com`
 
 ### Loon
 
-1. 复制插件链接：`https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TingDianDian/tingdiandian.plugin`
-2. Loon → 插件 → 右上角➕ → 粘贴链接 → 确定
-3. 确保 MitM 已开启
+```
+https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TingDianDian/tingdiandian.plugin
+```
+
+1. Loon → 插件 → 右上角➕ → 粘贴链接 → 确定
+2. 确保 MitM 已开启
 
 ## 使用方法
 
 1. 安装模块/插件
 2. 确保 MitM 已开启，域名已添加
-3. **杀掉 App 重新打开**（RevenueCat 有本地缓存）
+3. **杀掉 App 重新打开**（本地缓存清空）
+
+## ⚠️ 重要说明
+
+v1.1 基于实际抓包数据修复了以下问题：
+- **修复路径匹配**：v1.0 使用 `/app/` 路径匹配，但实际请求中**根本没有这个路径前缀**（如 `/user/d6z7qikngvt2mxas` 而非 `/app/user/...`），导致脚本完全没生效
+- **修复字段名**：实际 JSON 中是 `isPro`（不是 `isSubscribed`），`entitlement` 是字符串 `"free"` 而非对象
+- **新增积分清零**：`pointsUsed` 和 `pointsFrozen` 强制归零，防止服务端累计扣分
 
 ## 已知限制
 
 - RevenueCat 有本地缓存，需杀掉 App 重新打开才能生效
-- 部分会员状态从 RevenueCat PurchaserInfo 读取，如果 App 使用 RC SDK 的本地缓存的 entitlements，可能需要额外的拦截
-- 基于 IPA 静态分析（v1.1.38），未经实际抓包验证，可能需要根据实际请求/响应 JSON 结构调整
+- 翻译扣分在服务端执行，MITM 无法拦截服务端内部的积分扣减逻辑
+- 通过修改 `/user/...` 响应中的 `pointsUsed=0`、`pointsLimit=999999` 让 App 本地显示无限积分，但服务端实际扣分不受影响
 
 ## 仓库
 

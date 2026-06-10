@@ -1,5 +1,5 @@
 #!name=听点点 TingDianDian Pro Unlock
-#!desc=解锁听点点所有 Pro/Permanent 会员功能（基于 IPA 静态分析 v1.1.38）
+#!desc=解锁听点点所有 Pro/Permanent 会员功能 + 积分无限（基于实际抓包修复 v1.1）
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/TingDianDian
 #!icon=https://cdn.tingdiandian.com/share/qrcode.png
@@ -9,4 +9,4 @@
 hostname = api.tingdiandian.com
 
 [Script]
-http-response ^https?:\/\/api\.tingdiandian\.com\/app\/.*$ script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TingDianDian/tingdiandian_qx.js, requires-body = true, tag = 听点点 Pro Unlock
+http-response ^https?:\/\/api\.tingdiandian\.com\/(config\/|user\/|transcript\/|translate\/|content-source\/).*$ script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TingDianDian/tingdiandian_qx.js, requires-body = true, tag = 听点点 Pro Unlock
