@@ -1,0 +1,8 @@
+[MITM]
+hostname = clawhub.ai
+
+[Script]
+http-response ^https?://clawhub\.ai/api/v1/getCurrentUser requires-body = 1, script-path = https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/YouMind/youmind_qx.js, tag = YouMind Pro Unlock
+
+[Sni]
+47.89.18.164
