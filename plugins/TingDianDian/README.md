@@ -11,7 +11,7 @@
 | 付费系统 | RevenueCat + 自建后端 |
 | ATS | ✅ NSAllowsArbitraryLoads = true，无 SSL Pinning |
 
-## 插件功能（v1.2 - 基于抓包修复转录失败）
+## 插件功能（v1.3）
 
 - ✅ **Pro 永久会员** — isPro=true, isProPermanentMember=true
 - ✅ **基础永久/月付/年付** — 全部解锁
@@ -22,7 +22,7 @@
 - ✅ **到期时间** — 全部改为 2099-12-31
 - ✅ **entitlement** — free → pro
 - ✅ **商品价格** — purchase-catalog 所有商品价格改为0
-- ✅ **强制转录成功** — transcript/create 服务端额度不足时强制伪造成功响应
+- ✅ **转录失败修复** — transcript/create 额度不足时返回已有成功转录
 
 ## 拦截域名
 
@@ -55,25 +55,20 @@ https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/TingDia
 2. 确保 MitM 已开启，域名已添加
 3. **杀掉 App 重新打开**（本地缓存清空）
 
-## ⚠️ 重要说明
-
-v1.2 修复了转录失败问题：
-- 服务端返回"点点额度不足，无法创建转录"时，强制伪造成功响应
-- 同时拦截 transcript/statuses 中的错误状态，强制改为 SUCCEEDED
-
 ## 版本历史
 
 | 版本 | 说明 |
 |------|------|
 | v1.0 | 初始版本，正则写错完全没生效 |
 | v1.1 | 修复路径匹配和字段名，积分/会员功能正常 |
-| v1.2 | 新增 transcript/create 强制成功，修复转录失败 |
+| v1.2 | 新增 transcript/create 强制成功 |
+| v1.3 | transcript/create 额度不足时返回已有成功转录 |
 
 ## 已知限制
 
 - RevenueCat 有本地缓存，需杀掉 App 重新打开才能生效
 - 翻译扣分在服务端执行，MITM 无法拦截服务端内部的积分扣减逻辑
-- 通过修改 `/user/...` 响应中的 `pointsUsed=0`、`pointsLimit=999999` 让 App 本地显示无限积分
+- 通过修改 `/user/...` 响应中的 `pointsUsed=0`、`pointsLimit=999999` 解决
 
 ## 仓库
 

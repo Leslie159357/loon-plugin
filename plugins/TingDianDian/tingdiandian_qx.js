@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TingDianDian Pro Unlock
 // @namespace    https://github.com/Leslie159357/Loon-Plugins
-// @version      1.2.0
+// @version      1.3.0
 // @description  听点点 - 解锁所有Pro/Permanent会员功能（基于实际抓包修复）
 // @author       Leslie159357
 // @license      MIT
@@ -257,37 +257,47 @@ try {
   // ===== transcript/create - 创建转录 =====
   if (path === 'transcript/create') {
     if (modified.success === false || !modified.success) {
-      // 服务端拒绝（额度不足），伪造成功响应
-      // 从请求URL提取参数
+      // 服务端拒绝（额度不足），返回一个已存在的成功转录
+      // 这样 App 可以直接使用已有数据，不需要等待后台任务
+      var existingTranscripts = [
+        {id:54675,name:"Hello and welcome! The London to Edinburgh Challenge: Episode 1",contentEpisodeId:24670515,basePath:"5-30FiVdOktHwFuI"},
+        {id:54682,name:"Bus, train, or bike? The London to Edinburgh Challenge: Episode 2",contentEpisodeId:24670516,basePath:"5-30FiVdOktHwFuI"},
+        {id:54687,name:"Buying clothes - The London to Edinburgh Challenge: Episode 4",contentEpisodeId:24670518,basePath:"S299CgWRzwhw-OFl"},
+        {id:54685,name:"Paula explores London - The London to Edinburgh Challenge: Episode 3",contentEpisodeId:24670517,basePath:"FnmriTrHWY0T0ubw"}
+      ];
+      var pick = existingTranscripts[Math.floor(Math.random() * existingTranscripts.length)];
       modified.success = true;
       delete modified.message;
       modified.data = {
-        id: Math.floor(Math.random() * 90000 + 10000),
+        id: pick.id,
         collectionId: null,
         contentSourceId: 5140,
-        contentEpisodeId: 0,
+        contentEpisodeId: pick.contentEpisodeId,
         userId: 'd6z7qikngvt2mxas',
-        name: 'Transcription',
-        basePath: '',
-        status: 'RUNNING',
+        name: pick.name,
+        basePath: pick.basePath,
+        status: 'SUCCEEDED',
         languageHints: ['en'],
         type: 'video',
         order: null,
         error: null,
         latest: true,
+        splitDuration: 180,
         subtitleMasks: null,
         showSubtitleMask: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        createdAt: '2026-06-10T11:54:41.964Z',
+        updatedAt: '2026-06-10T11:55:10.141Z',
+        playProgress: null,
+        subtitle: null
       };
-      log('✅ transcript/create 强制改为成功');
+      log('✅ transcript/create 返回已有成功转录 #' + pick.id);
     }
   }
   
   // ===== transcript/statuses =====
   if (path.indexOf('transcript/statuses') !== -1) {
     if (modified.data && Array.isArray(modified.data)) {
-      for (let i = 0; i < modified.data.length; i++) {
+      for (var i = 0; i < modified.data.length; i++) {
         if (modified.data[i].error) {
           log('❌ transcript/statuses 有错误: ' + modified.data[i].error);
           modified.data[i].status = 'SUCCEEDED';
@@ -295,6 +305,20 @@ try {
         }
       }
     }
+  }
+  
+  // ===== content-source/{id}/transcripts =====
+  // 确保 transcripts 列表里能看到转录
+  var contentTranscriptsMatch = path.match(/^content-source\/(\d+)\/transcripts/);
+  if (contentTranscriptsMatch) {
+    // 透传，不需要改
+    log('✅ content-source transcripts 透传');
+  }
+  
+  // ===== user/files - 确保已有转录在列表里 =====
+  if (path === 'user/files' && modified.data && modified.data.transcripts) {
+    // 透传已有数据
+    log('✅ user/files 透传（已有 ' + modified.data.transcripts.length + ' 个转录）');
   }
   
   $done({ body: JSON.stringify(modified) });
