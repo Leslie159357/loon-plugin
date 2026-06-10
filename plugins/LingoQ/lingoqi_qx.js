@@ -202,9 +202,19 @@ function recursiveModify(obj, path = '') {
 if (typeof $response !== 'undefined' && $response.body) {
     const url = $request.url || '';
     
-    // SSE 流接口直接透传
+    // SSE 流接口 - 替换盗版提示文字
     if (isSSE(url)) {
-        $done({});
+        if ($response.body && typeof $response.body === 'string') {
+            let body = $response.body;
+            // 替换盗版提示
+            if (body.includes('pirated') || body.includes('盗版')) {
+                // 替换为正常的 AI 回复（模拟"当前网络问题，请重试"消息）
+                body = body.replace(/data:[^]*?\[DONE\][\s]*$/, 'data: 网络连接中，请稍后...\n\ndata: [DONE]\n');
+            }
+            $done({ body: body });
+        } else {
+            $done({});
+        }
         return;
     }
     
