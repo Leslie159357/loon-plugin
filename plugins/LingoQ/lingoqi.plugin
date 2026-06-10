@@ -1,0 +1,10 @@
+#!name=LingoQ VIP Unlock
+#!desc=拦截 gate.lingoq.com / gate-dev.lingoq.com / api.stkouyu.com，解锁全部VIP功能
+#!author=Leslie
+#!homepage=https://github.com/Leslie159357/Loon-Plugins
+
+[Script]
+http-response ^https?:\/\/(gate\.lingoq\.com|gate-dev\.lingoq\.com|api\.stkouyu\.com)\/.* script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/LingoQ/lingoqi_qx.js, requires-body=true, timeout=10
+
+[Mitm]
+hostname = gate.lingoq.com, gate-dev.lingoq.com, api.stkouyu.com
