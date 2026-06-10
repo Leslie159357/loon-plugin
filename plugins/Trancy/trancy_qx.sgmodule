@@ -1,0 +1,19 @@
+#!name=Trancy Premium
+#!desc=解锁 Trancy Premium + AI 会员（MITM 方案）
+#!author=Minis
+#!home=https://github.com/your-repo
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/xx/xx/xx/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-1-0-0-0-0.png/512x512bb.png
+#!version=1.0
+#!date=2026-06-11
+
+[Script]
+http-response ^https?://api\.trancy\.org/ requires-body=1, tag=Trancy API, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Trancy/trancy_mitm.js
+http-response ^https?://api\.revenuecat\.com/v1/(subscribers|products|offerings) requires-body=1, tag=RevenueCat API, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Trancy/trancy_mitm.js
+http-response ^https?://api\.rc-backup\.com/v1/(subscribers|products|offerings) requires-body=1, tag=RevenueCat Backup, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Trancy/trancy_mitm.js
+http-response ^https?://api-paywalls\.revenuecat\.com/ requires-body=1, tag=RevenueCat Paywalls, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Trancy/trancy_mitm.js
+
+[Host]
+api.trancy.org = https
+api.revenuecat.com = https
+api.rc-backup.com = https
+api-paywalls.revenuecat.com = https
