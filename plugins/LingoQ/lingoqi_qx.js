@@ -1,6 +1,6 @@
-// LingoQ VIP Unlock - MITM Script v2.2
+// LingoQ VIP Unlock - MITM Script v2.3
 // QX & Loon 通用
-// 基于抓包数据: 修复SSE流截断问题，保留字幕拦截
+// 基于实际抓包数据优化
 // Bundle ID: com.lingoq.ios.lingeqi
 
 // =============================================
@@ -9,12 +9,10 @@
 
 // VIP 字段配置（基于实际抓包验证）
 const VIP_CONFIG = {
-    // VIP 核心字段（来自 /usercenter-facade-app-prod/users/index）
     vip: true,
     lifetimeVip: true,
     vipLeftDays: 99999,
     
-    // 订阅/会员状态
     isVip: true,
     is_vip: true,
     vipStatus: 1,
@@ -36,7 +34,6 @@ const VIP_CONFIG = {
     subscription_status: "active",
     status: "active",
     
-    // 到期时间 (2099-12-31)
     expireDate: "2099-12-31T23:59:59Z",
     expire_date: "2099-12-31T23:59:59Z",
     expiryDate: "2099-12-31T23:59:59Z",
@@ -48,7 +45,6 @@ const VIP_CONFIG = {
     vipEndDate: "2099-12-31T23:59:59Z",
     vip_end_date: "2099-12-31T23:59:59Z",
     
-    // 时间戳
     expireTimestamp: 4102444799,
     expire_timestamp: 4102444799,
     expiryTimestamp: 4102444799,
@@ -58,7 +54,6 @@ const VIP_CONFIG = {
     vipEndUts: 4102444799000,
     vip_end_uts: 4102444799000,
     
-    // 付费状态
     hasPurchased: true,
     has_purchased: true,
     hasBought: true,
@@ -69,7 +64,14 @@ const VIP_CONFIG = {
     payed: true,
     purchased: true,
     
-    // 其他
+    isFree: true,
+    is_free: true,
+    price: 0,
+    priceOrigin: 0,
+    price_origin: 0,
+    originalPrice: 0,
+    original_price: 0,
+    
     isTrial: false,
     is_trial: false,
     isExpired: false,
@@ -83,7 +85,6 @@ const VIP_CONFIG = {
     trialPeriod: false,
     trial_period: false,
     
-    // 数量类 - 无限
     balance: 999999,
     credit: 999999,
     credits: 999999,
@@ -102,9 +103,11 @@ const VIP_CONFIG = {
     star: 999999,
     stars: 999999,
     signInDays: 999,
+    trialState: 1,
+    videoState: 1,
+    chatScore: 999999,
 };
 
-// VIP相关Key名（递归匹配用）
 const VIP_KEYS = [
     'vip', 'member', 'subscription', 'premium', 'pro', 'subscriber',
     'paid', 'payed', 'purchased', 'bought',
@@ -121,12 +124,12 @@ const VIP_KEYS = [
     'signInDays', 'sign_in_days',
 ];
 
-// SSE 流接口（直接透传，不尝试解析 JSON）
+// SSE 流接口（直接透传）
 const SSE_PATHS = [
-    'stream/video/chat',
+    'stream/video',
 ];
 
-// 需要透传的静态资源
+// 静态资源透传
 const PASSTHROUGH_EXTENSIONS = [
     '.m3u8', '.ts', '.jpg', '.png', '.gif', '.wav', '.mp3',
 ];
@@ -164,33 +167,21 @@ function recursiveModify(obj, path = '') {
         const currentPath = path ? path + '.' + key : key;
         const keyLower = key.toLowerCase();
         
-        // 精确匹配VIP配置
         if (VIP_CONFIG.hasOwnProperty(key)) {
             obj[key] = VIP_CONFIG[key];
             continue;
         }
         
-        // 拦截 subtitleUrl - 阻止盗版提示字幕加载
-        if (keyLower === 'subtitleurl' && typeof val === 'string' && val.includes('video-subtitle/')) {
-            obj[key] = '';
-            continue;
-        }
-        
-        // 数字 0/1 布尔类字段泛匹配
         if (val === false || val === 0) {
             for (const vipKey of VIP_KEYS) {
                 if (keyLower.includes(vipKey.toLowerCase())) {
-                    if (typeof val === 'boolean') {
-                        obj[key] = true;
-                    } else if (typeof val === 'number') {
-                        obj[key] = 1;
-                    }
+                    if (typeof val === 'boolean') obj[key] = true;
+                    else if (typeof val === 'number') obj[key] = 1;
                     break;
                 }
             }
         }
         
-        // 数字 0 泛匹配余额类
         if (val === 0 && typeof val === 'number') {
             for (const balKey of ['balance', 'credit', 'coin', 'gem', 'diamond', 'trophy', 'flower', 'heart', 'energy', 'star', 'point', 'score']) {
                 if (keyLower.includes(balKey)) {
@@ -200,7 +191,6 @@ function recursiveModify(obj, path = '') {
             }
         }
         
-        // 递归遍历对象
         if (typeof val === 'object') {
             obj[key] = recursiveModify(val, currentPath);
         }
@@ -212,7 +202,7 @@ function recursiveModify(obj, path = '') {
 if (typeof $response !== 'undefined' && $response.body) {
     const url = $request.url || '';
     
-    // SSE 流接口直接透传，不处理
+    // SSE 流接口直接透传
     if (isSSE(url)) {
         $done({});
         return;
@@ -221,6 +211,12 @@ if (typeof $response !== 'undefined' && $response.body) {
     // 静态资源透传
     if (isPassthrough(url)) {
         $done({});
+        return;
+    }
+    
+    // 字幕 JSON 文件 - 替换盗版提示字幕
+    if (url.includes('video-subtitle/')) {
+        $done({ body: '{"sentences":[]}' });
         return;
     }
     
@@ -233,7 +229,6 @@ if (typeof $response !== 'undefined' && $response.body) {
             $done({});
         }
     } catch (e) {
-        // 非 JSON 响应直接透传
         $done({});
     }
 } else {
