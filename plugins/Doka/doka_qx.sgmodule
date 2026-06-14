@@ -20,3 +20,6 @@ http-response ^https?:\/\/www\.yindoka\.com\/apple\/check-subscription-status sc
 
 # 收据验证拦截
 http-response ^https?:\/\/www\.yindoka\.com\/apple\/validate-receipt script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_qx.js, requires-body=true, timeout=10, tag=DokaReceipt
+
+# AI 构图拦截 - 次数用完时返回成功
+http-response ^https?:\/\/www\.yindoka\.com\/ai_camera\/v2 script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_qx.js, requires-body=true, timeout=10, tag=DokaAICamera

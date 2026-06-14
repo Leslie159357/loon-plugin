@@ -1,7 +1,7 @@
 // ==Quantumult X==
 // @name         Doka Pro Unlock
-// @description  解锁 Doka Pro VIP（基于抓包精准数据）
-// @version      1.0
+// @description  解锁 Doka Pro VIP + AI 构图无限使用
+// @version      1.1
 // @author       Minis
 // ==/Quantumult X==
 
@@ -13,7 +13,9 @@ if (!body) {
   return;
 }
 
-// vip-detail 处理
+try {
+
+// ===== vip-detail：修改 VIP 状态 =====
 if (url.indexOf('/apple/vip-detail') >= 0) {
   var obj = JSON.parse(body);
   if (obj && obj.data) {
@@ -28,7 +30,7 @@ if (url.indexOf('/apple/vip-detail') >= 0) {
   return;
 }
 
-// check-subscription-status 处理
+// ===== check-subscription-status =====
 if (url.indexOf('/apple/check-subscription-status') >= 0) {
   var obj = JSON.parse(body);
   if (obj && obj.data) {
@@ -44,7 +46,7 @@ if (url.indexOf('/apple/check-subscription-status') >= 0) {
   return;
 }
 
-// validate-receipt 处理
+// ===== validate-receipt =====
 if (url.indexOf('/apple/validate-receipt') >= 0) {
   var fake = {
     code: 0,
@@ -62,6 +64,37 @@ if (url.indexOf('/apple/validate-receipt') >= 0) {
   };
   $done({body: JSON.stringify(fake)});
   return;
+}
+
+// ===== ai_camera/v2：AI 构图拦截 =====
+// 拦截次数用完的错误响应，直接返回成功
+if (url.indexOf('/ai_camera/v2') >= 0) {
+  var obj = JSON.parse(body);
+  // 如果返回错误码，改为成功
+  if (obj && obj.code && obj.code !== 0) {
+    // 保留原始响应数据，只改 code 和 message
+    // 如果 data 不为空则保留，否则创建空 data
+    if (!obj.data) {
+      obj.data = {};
+    }
+    obj.code = 0;
+    obj.message = 'succ';
+    // 确保有构图结果，避免 App 崩溃
+    if (!obj.data.LeftTopCrd) {
+      obj.data.LeftTopCrd = [0, 0];
+      obj.data.RightDownCrd = [100, 100];
+      obj.data.ComposeReason = '';
+    }
+    $done({body: JSON.stringify(obj)});
+    return;
+  }
+  // 已经是成功的响应，透传
+  $done({});
+  return;
+}
+
+} catch(e) {
+  // 任何错误都不影响原始请求
 }
 
 $done({});
