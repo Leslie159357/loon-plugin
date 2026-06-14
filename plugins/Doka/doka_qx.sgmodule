@@ -1,13 +1,11 @@
-#!name = Doka Pro Unlock
-#!desc = Doka相机 - 解锁 Doka Pro VIP（基于抓包 v3）
-#!author = Minis
+#!name=Doka Pro Unlock
+#!desc=Doka相机 解锁 Doka Pro VIP
+#!author=Minis
 
 [MITM]
-hostname = www.yindoka.com
+hostname=www.yindoka.com
 
 [Script]
-http-response ^https?:\/\/www\.yindoka\.com\/apple\/vip-detail requires-body = 1, script-path = doka_mitm.js, tag = Doka VIP Detail
-http-response ^https?:\/\/www\.yindoka\.com\/apple\/check-subscription-status requires-body = 1, script-path = doka_mitm.js, tag = Doka Subscription
-http-response ^https?:\/\/www\.yindoka\.com\/apple\/validate-receipt requires-body = 1, script-path = doka_mitm.js, tag = Doka Receipt
-http-response ^https?:\/\/www\.yindoka\.com\/apple\/ requires-body = 1, script-path = doka_mitm.js, tag = Doka Apple All
-http-response ^https?:\/\/www\.yindoka\.com\/app\/ requires-body = 1, script-path = doka_mitm.js, tag = Doka App All
+http-response ^https?:\/\/www\.yindoka\.com\/apple\/vip-detail requires-body=1 script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_mitm.js tag=Doka VIP Detail
+http-response ^https?:\/\/www\.yindoka\.com\/apple\/check-subscription-status requires-body=1 script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_mitm.js tag=Doka Subscription
+http-response ^https?:\/\/www\.yindoka\.com\/apple\/validate-receipt requires-body=1 script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_mitm.js tag=Doka Receipt
