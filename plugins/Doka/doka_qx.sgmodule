@@ -1,25 +1,16 @@
 #!name=Doka Pro Unlock
-#!desc=Doka 相机 解锁 Doka Pro VIP（基于抓包精准数据）
+#!desc=Doka 相机 解锁 Doka Pro VIP + AI 构图无限使用（v2.0 全路径匹配）
 #!author=Minis
 #!home=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/Doka
 #!icon=https://www.yindoka.com/favicon.ico
 #!tag=unlock,相机,摄影,Doka
 #!system=ios
 #!date=2026-06-14
-#!version=1.0
+#!version=2.0
 
 [MITM]
 hostname = %APPEND% www.yindoka.com
 
 [Script]
-# vip-detail 拦截
-http-response ^https?:\/\/www\.yindoka\.com\/apple\/vip-detail script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_qx.js, requires-body=true, timeout=10, tag=DokaVIPDetail
-
-# 订阅状态拦截
-http-response ^https?:\/\/www\.yindoka\.com\/apple\/check-subscription-status script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_qx.js, requires-body=true, timeout=10, tag=DokaSubscription
-
-# 收据验证拦截
-http-response ^https?:\/\/www\.yindoka\.com\/apple\/validate-receipt script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_qx.js, requires-body=true, timeout=10, tag=DokaReceipt
-
-# AI 构图拦截 - 次数用完时返回成功
-http-response ^https?:\/\/www\.yindoka\.com\/ai_camera\/v2 script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_qx.js, requires-body=true, timeout=10, tag=DokaAICamera
+# 一条规则匹配所有 www.yindoka.com 的响应，内部路由
+http-response ^https?:\/\/www\.yindoka\.com\/.* script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Doka/doka_qx.js, requires-body=true, timeout=10, max-size=2097152, tag=DokaPro
