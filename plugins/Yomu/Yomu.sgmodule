@@ -5,12 +5,14 @@
 #!icon = https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c9/5b/a4/c95ba48e-6360-4697-aba7-c1a1e1e80dcb/AppIcon-0-0-1x_U007emarketing-0-7-0-0-0-85-220-0.png/512x512bb.png
 #!system = ios
 #!date = 2026-06-18
-#!version = 1.0
+#!version = 1.2
 
 [Script]
-Yomu-Premium-Profile = type=http-response, pattern=^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/analytics\/profiles\/[^\/]+\/$, requires-body=1, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js
+Yomu-Analytics-Profile = type=http-response, pattern=^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/analytics\/profiles\/, requires-body=1, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js
 
-Yomu-Paywall = type=http-response, pattern=^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/in-apps\/([^\/]+)\/paywall, requires-body=1, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js
+Yomu-Cross-Placement = type=http-response, pattern=^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/in-apps\/profile\/, requires-body=1, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js
+
+Yomu-All-Profile = type=http-response, pattern=^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/.*profile, requires-body=1, script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js
 
 [MITM]
 hostname = api.adaptytech.com

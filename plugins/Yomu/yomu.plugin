@@ -1,19 +1,22 @@
 #!name=Yomu Premium 解锁
-#!desc=解锁 Yomu 漫画阅读器的全部 Premium 功能 — 无限制 Library/Tracker/Servers/Backup/Incognito/Lock App
+#!desc=解锁 Yomu 漫画阅读器的全部 Premium 功能
 #!author=Minis
 #!home=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/Yomu
 #!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c9/5b/a4/c95ba48e-6360-4697-aba7-c1a1e1e80dcb/AppIcon-0-0-1x_U007emarketing-0-7-0-0-0-85-220-0.png/512x512bb.png
 #!system=ios
 #!date=2026-06-18
-#!version=1.0
+#!version=1.2
 #!tag=unlock,漫画,阅读,manga
 
 [Script]
-# 核心: Analytics Profile — 注入 paid_access_levels premium
-http-response ^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/analytics\/profiles\/[^\/]+\/$ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js, requires-body=true, timeout=10, tag=Yomu Premium Profile
+# 核心: analytics profile（GET + PATCH）
+http-response ^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/analytics\/profiles\/ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js, requires-body=true, timeout=10, tag=Yomu Analytics Profile
 
-# 备用: 仿问 paywall variations 可能也需拦截
-http-response ^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/in-apps\/([^\/]+)\/paywall script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js, requires-body=true, timeout=10, tag=Yomu Paywall
+# 备用: cross-placement-info（含 profile 相关数据）
+http-response ^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/in-apps\/profile\/ script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js, requires-body=true, timeout=10, tag=Yomu Cross Placement
+
+# 备用: 非 analytics 的 profile 路径
+http-response ^https?:\/\/api\.adaptytech\.com\/api\/v1\/sdk\/.*profile script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Yomu/yomu.js, requires-body=true, timeout=10, tag=Yomu All Profile
 
 [MITM]
 hostname = %APPEND% api.adaptytech.com
