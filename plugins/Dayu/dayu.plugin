@@ -1,0 +1,22 @@
+#!name=鱼吃鱼(Dayu) 资源修改
+#!desc=修改鱼吃鱼(dayu)的钻石、物品、鱼碎片等资源
+#!author=Minis
+#!homepage=https://github.com/Leslie159357/self-use/tree/main/plugins/Dayu
+#!icon=https://hw-cdn-dayu.lanfeitech.com/prod/icon/PlbrJWbC-3-1675737427.png
+#!system=iOS
+#!date=2026-06-21
+#!version=1.0
+
+[Script]
+http-request ^https?://prod-dayu\.lanfeitech\.com/api/user/(update_user_resource|update_user_goods|update_fish_fragment) script-path=https://raw.githubusercontent.com/Leslie159357/self-use/main/plugins/Dayu/dayu_loon.js, requires-body=true, tag=鱼吃鱼-资源修改
+
+[MITM]
+hostname = %APPEND% prod-dayu.lanfeitech.com
+
+[General]
+skip-proxy = *
+bypass-tun = *
+dns-server = system, 223.5.5.5
+
+[Rule]
+DOMAIN-SUFFIX,lanfeitech.com,DIRECT
