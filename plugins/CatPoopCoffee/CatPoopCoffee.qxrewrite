@@ -1,5 +1,0 @@
-[rewrite_remote]
-https://raw.githubusercontent.com/Leslie159357/self-use/main/plugins/CatPoopCoffee/maomao_cat_mitm.js, tag=猫屎咖啡 资源修改, update-interval=86400
-
-[MITM]
-hostname = minigames.liuzhaoling.com

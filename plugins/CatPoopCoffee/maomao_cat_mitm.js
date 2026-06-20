@@ -2,19 +2,22 @@
 // 微信小程序 AppId: wx02f4bd4c2c4522a9
 // 服务器域名: minigames.liuzhaoling.com
 // 数据接口: POST /userData/upsertUserData
-// 
-// 支持: Quantumult X / Loon / Surge / Stash
 //
-// 使用说明:
-// 1. 在代理工具中开启 MITM，添加域名 minigames.liuzhaoling.com
-// 2. 安装并信任根证书
-// 3. 将此脚本配置为 script-request-body（请求体改写）
-// 4. 重新打开小程序即可
-
-// 注意：这个游戏的数据是客户端算好完整存档后整体上传到服务器。
-// 服务器仅作存储，不做校验。
-// 所以只要修改上传请求中的 data 字段，服务器就会存放大版的数据。
-// 但更关键的是——游戏主数据存在微信本地存储，所以本地直接改才是最彻底的。
+// 支持: Quantumult X (script-request-body) / Loon (http-request) / Surge (http-request)
+//
+// Quantumult X 配置:
+// [rewrite_local]
+// ^https:\/\/minigames\.liuzhaoling\.com\/userData\/upsertUserData url script-request-body catpoop.js
+//
+// [MITM]
+// hostname = minigames.liuzhaoling.com
+//
+// Loon 配置:
+// [Script]
+// http-request ^https?:\/\/minigames\.liuzhaoling\.com\/userData\/upsertUserData script-path=catpoop.js, timeout=10, tag=猫屎咖啡
+//
+// [MITM]
+// hostname = %APPEND% minigames.liuzhaoling.com
 
 (function() {
   // ===== 要修改的资源数值 =====
@@ -54,33 +57,34 @@
     return localData;
   }
 
-  // ===== 入口 =====
-  var url = $request.url;
-  var body = $request.body || '';
+  // ===== 处理 body =====
+  function processBody(body) {
+    try {
+      var obj = JSON.parse(body);
+      if (obj.data && typeof obj.data === 'string') {
+        var dataObj = JSON.parse(obj.data);
+        if (dataObj.localData) {
+          dataObj.localData = modifyLocalData(dataObj.localData);
+          obj.data = JSON.stringify(dataObj);
+          console.log('[猫屎咖啡] 资源已修改 ✓');
+          return JSON.stringify(obj);
+        }
+      }
+    } catch (e) {
+      console.log('[猫屎咖啡] 解析失败: ' + e.message);
+    }
+    return body;
+  }
 
-  // 只拦截 upsertUserData
+  // ===== 入口: 兼容 QX / Loon / Surge =====
+  var url = $request.url;
+  var body = $request.body || $request.bodyBytes || '';
+
   if (url.indexOf('/userData/upsertUserData') === -1) {
     $done({});
     return;
   }
 
-  try {
-    var obj = JSON.parse(body);
-    if (obj.data && typeof obj.data === 'string') {
-      var dataObj = JSON.parse(obj.data);
-      if (dataObj.localData) {
-        dataObj.localData = modifyLocalData(dataObj.localData);
-        obj.data = JSON.stringify(dataObj);
-        console.log('[猫屎咖啡] 资源已修改 ✓');
-        $done({body: JSON.stringify(obj)});
-      } else {
-        $done({});
-      }
-    } else {
-      $done({});
-    }
-  } catch (e) {
-    console.log('[猫屎咖啡] 解析失败: ' + e.message);
-    $done({});
-  }
+  var modifiedBody = processBody(body);
+  $done({body: modifiedBody});
 })();
