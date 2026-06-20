@@ -48,8 +48,8 @@
     '_researchCount': 999,        // 研究数量
     '_roomCount': 999,            // 房间数量
     '_decorateCount': 999,        // 装饰数量
-    'gameTime': 0,                // 游戏时间（置0防封）
-    'lianGameTime': 0             // 连连看游戏时间
+    'gameTime': 999999,           // 游戏时间（拉长）
+    'lianGameTime': 999999        // 连连看游戏时间
   };
 
   // ===== 修改 localData =====
