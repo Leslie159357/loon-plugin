@@ -6,7 +6,7 @@
 #!tag=RevenueCat|解锁|premium
 
 [Script]
-http-response ^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/ script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/EchoLoop/EchoLoop_RC.js, requires-body=true, timeout=10, tag=EchoLoop 解锁
+http-request ^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/ script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/EchoLoop/EchoLoop_RC.js, timeout=10, tag=EchoLoop 解锁
 
 [MITM]
 hostname = api.revenuecat.com
