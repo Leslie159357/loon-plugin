@@ -1,31 +1,28 @@
 /*
 Echo Loop RevenueCat 解锁脚本
-http-response 模式：拦截 RevenueCat 响应并替换为伪造数据
-适配 Loon / Surge / Shadowrocket
+http-request 模式：拦截请求并直接返回伪造的 premium 订阅数据
+适配 Loon / Surge / Quantumult X / Shadowrocket
 
-Loon 配置:
+Loon Plugin:
+#!name=Echo Loop Premium Unlocker
 [Script]
-http-response ^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/ script-path=EchoLoop_RC.js, requires-body=true, timeout=10, tag=EchoLoop 解锁
-
+http-request ^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/ script-path=EchoLoop_RC.js, timeout=10, tag=EchoLoop 解锁
 [MITM]
 hostname = api.revenuecat.com
 */
 
-const entitlementId = "premium";
-const productId = "top.echo-loop.lifetime";
-
-const body = {
+var body = {
   subscriber: {
     entitlements: {
-      [entitlementId]: {
+      "premium": {
         expires_date: "2099-12-31T23:59:59Z",
-        product_identifier: productId,
+        product_identifier: "top.echo-loop.lifetime",
         purchase_date: "2026-01-01T00:00:00Z",
         is_active: true
       }
     },
     subscriptions: {
-      [productId]: {
+      "top.echo-loop.lifetime": {
         expires_date: "2099-12-31T23:59:59Z",
         purchase_date: "2026-01-01T00:00:00Z",
         is_active: true,
@@ -45,8 +42,6 @@ const body = {
 
 $done({
   status: 200,
-  headers: {
-    "Content-Type": "application/json"
-  },
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify(body)
 });
