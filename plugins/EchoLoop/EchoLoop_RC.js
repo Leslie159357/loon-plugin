@@ -1,11 +1,11 @@
 /*
 Echo Loop RevenueCat 解锁脚本
-http-request 模式：直接响应伪造的 RevenueCat 订阅数据
-适配 Loon / Surge / Quantumult X / Shadowrocket
+http-response 模式：拦截 RevenueCat 响应并替换为伪造数据
+适配 Loon / Surge / Shadowrocket
 
-配置:
+Loon 配置:
 [Script]
-http-request ^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/ script-path=EchoLoop_RC.js, requires-body=true, tag=EchoLoop 解锁
+http-response ^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/ script-path=EchoLoop_RC.js, requires-body=true, timeout=10, tag=EchoLoop 解锁
 
 [MITM]
 hostname = api.revenuecat.com
@@ -14,8 +14,7 @@ hostname = api.revenuecat.com
 const entitlementId = "premium";
 const productId = "top.echo-loop.lifetime";
 
-// 统一的伪造数据
-const FAKE_BODY = {
+const body = {
   subscriber: {
     entitlements: {
       [entitlementId]: {
@@ -44,17 +43,10 @@ const FAKE_BODY = {
   request_date_ms: Date.now()
 };
 
-const RESPONSE = {
+$done({
   status: 200,
   headers: {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*"
+    "Content-Type": "application/json"
   },
-  body: JSON.stringify(FAKE_BODY)
-};
-
-// ============ 各平台运行时 ============
-// Loon / Surge / Shadowrocket
-if (typeof $done !== "undefined") {
-  $done(RESPONSE);
-}
+  body: JSON.stringify(body)
+});
