@@ -1,11 +1,8 @@
 #!name=MN AI → OpenCode
-#!desc=劫持 MarginNote AI 到你的 OpenCode API
-#!system=ios
-#!version=1.0
-#!author=Leslie159357
+#!desc=劫持 MarginNote AI 到你自己的 API
 
 [rewrite_local]
-^https:\/\/ark\.cn-beijing\.volces\.com url http://173.254.212.158:8443
+^https:\/\/ark\.cn-beijing\.volces\.com url 302 http://173.254.212.158:8443
 
 [mitm]
 hostname = ark.cn-beijing.volces.com
