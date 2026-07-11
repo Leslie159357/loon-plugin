@@ -1,8 +1,8 @@
 #!name=MN AI → OpenCode
-#!desc=劫持 MarginNote AI 到你的 OpenCode API
+#!desc=劫持 MarginNote AI 到 OpenCode API（Host 映射 + MITM）
 #!icon=https://img.icons8.com/fluency/96/artificial-intelligence.png
 #!system=ios
-#!version=3.0
+#!version=3.1
 #!author=Leslie159357
 
 [Host]
