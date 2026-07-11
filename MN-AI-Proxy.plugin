@@ -1,12 +1,12 @@
 #!name=MN AI → OpenCode
-#!desc=劫持 MarginNote AI 到你的 OpenCode API
+#!desc=劫持 MarginNote AI 到你的 OpenCode API（脚本版）
 #!icon=https://img.icons8.com/fluency/96/artificial-intelligence.png
 #!system=ios
-#!version=1.4
+#!version=2.0
 #!author=Leslie159357
 
-[URL Rewrite]
-^https?:\/\/ark\.cn-beijing\.volces\.com http://173.254.212.158:58080
+[Script]
+http-request ^https?:\/\/ark\.cn-beijing\.volces\.com\/api\/v3\/chat\/completions script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/MN-AI-Proxy.js, timeout=30, tag=MN AI
 
 [MITM]
 hostname = ark.cn-beijing.volces.com
