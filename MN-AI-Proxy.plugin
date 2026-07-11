@@ -1,8 +1,8 @@
 #!name=MN AI → OpenCode
-#!desc=把 MarginNote AI 请求劫持到 OpenCode API
+#!desc=把 MarginNote AI 劫持到 OpenCode API（需主配置加 MNAI 代理）
 #!icon=https://img.icons8.com/fluency/96/artificial-intelligence.png
 #!system=ios
-#!version=1.1
+#!version=1.2
 #!author=Leslie159357
 
 [Rule]
@@ -10,6 +10,3 @@ DOMAIN-SUFFIX, volces.com, MNAI
 
 [MITM]
 hostname = *.volces.com
-
-[Script]
-http-request ^https?:\/\/ark\.cn-beijing\.volces\.com\/api\/v3\/chat\/completions script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/MN-AI-Redirect.js, timeout=30, tag=MN AI Redirect
