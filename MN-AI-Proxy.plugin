@@ -1,11 +1,11 @@
 #!name=MN AI → OpenCode
-#!desc=URL Rewrite 劫持 MarginNote AI 到你的 API
+#!desc=劫持 MarginNote AI 到你的 OpenCode API
 #!icon=https://img.icons8.com/fluency/96/artificial-intelligence.png
 #!system=ios
-#!version=4.0
+#!version=4.1
 #!author=Leslie159357
 
-[URL Rewrite]
+[rewrite_local]
 ^https:\/\/ark\.cn-beijing\.volces\.com http://173.254.212.158:8443
 
 [MITM]
