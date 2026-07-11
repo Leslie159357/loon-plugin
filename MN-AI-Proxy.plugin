@@ -1,0 +1,13 @@
+#!name=MN AI → OpenCode
+#!desc=把 MarginNote AI 请求劫持到 OpenCode API (deepseek-v4-flash)
+#!system=ios
+#!version=1.0
+
+[Proxy]
+MNAI = http, 173.254.212.158, 58080
+
+[Rule]
+DOMAIN-SUFFIX, volces.com, MNAI
+
+[MITM]
+hostname = *.volces.com
