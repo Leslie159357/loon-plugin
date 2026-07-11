@@ -2,11 +2,11 @@
 #!desc=劫持 MarginNote AI 到你的 OpenCode API
 #!icon=https://img.icons8.com/fluency/96/artificial-intelligence.png
 #!system=ios
-#!version=2.1
+#!version=3.0
 #!author=Leslie159357
 
-[Script]
-http-request ^https?:\/\/ark\.cn-beijing\.volces\.com\/api\/v3\/chat\/completions script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/MN-AI-Proxy.js, timeout=30, tag=MN AI
+[Host]
+ark.cn-beijing.volces.com = 173.254.212.158
 
 [MITM]
 hostname = ark.cn-beijing.volces.com
