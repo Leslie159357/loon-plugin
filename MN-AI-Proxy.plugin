@@ -2,11 +2,11 @@
 #!desc=劫持 MarginNote AI 到你的 OpenCode API
 #!icon=https://img.icons8.com/fluency/96/artificial-intelligence.png
 #!system=ios
-#!version=1.3
+#!version=1.4
 #!author=Leslie159357
 
-[Host]
-ark.cn-beijing.volces.com = 173.254.212.158:58080
+[URL Rewrite]
+^https?:\/\/ark\.cn-beijing\.volces\.com http://173.254.212.158:58080
 
 [MITM]
 hostname = ark.cn-beijing.volces.com
