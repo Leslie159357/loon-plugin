@@ -1,0 +1,23 @@
+#!name=TheGreatMe Premium Unlock
+#!desc=RevenueCat Bypass for TheGreatMe - Unlock all premium features
+#!author=TGMCrack
+#!homepage=https://github.com/tgm-crack/TGM-Unlock
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/.../AppIcon-1x_U007emarketing-0-7-0-85-220.png
+#!version=1.0.0
+#!logo=https://raw.githubusercontent.com/tgm-crack/main/logo.png
+#!date=2025-01-01
+#!tag=premium,unlock,thegreatme
+
+[General]
+skip_proxy = *.revenuecat.com, *.rc-backend.com
+
+[MITM]
+hostname = *.revenuecat.com, *.rc-backend.com, api-paywalls.revenuecat.com, api-diagnostics.revenuecat.com
+skip_validation = true
+
+[Script]
+http-response ^https:\/\/api\.revenuecat\.com\/v1\/(subscribers|offerings|product_entitlement_mapping) requires-body = true, script-path = https://raw.githubusercontent.com/tgm-crack/TGM-Unlock/main/tgm_premium.js
+http-response ^https:\/\/api-paywalls\.revenuecat\.com\/ requires-body = true, script-path = https://raw.githubusercontent.com/tgm-crack/TGM-Unlock/main/tgm_premium.js
+
+# No URL Rewrite needed — script handles interception
+# [URL Rewrite]
