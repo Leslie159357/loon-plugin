@@ -1,19 +1,12 @@
-#!name=EchoLoop Premium 解锁
-#!desc=解锁 EchoLoop 英语学习 app 的全部 Premium 功能 — 后端 API 通用注入（entitlements/premium/config）
-#!author=Minis
-#!home=https://github.com/Leslie159357/loon-plugin/tree/main/plugins/EchoLoop
-#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c9/5b/a4/c95ba48e-6360-4697-aba7-c1a1e1e80dcb/AppIcon-0-0-1x_U007emarketing-0-7-0-0-0-85-220-0.png/512x512bb.png
-#!system=ios
-#!date=2026-08-13
-#!version=1.0
-#!tag=unlock,英语,学习,premium
+#!name=Echo Loop Premium Unlocker
+#!desc=劫持 RevenueCat 解锁 Echo Loop 全部付费功能（AI 翻译/词典/解析等）
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/26/8e/f0/268ef003-0f97-76fc-0a37-a134a82c27d7/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/460x0w.webp
+#!author=Leslie159357
+#!homepage=https://github.com/Leslie159357/loon-plugin
+#!tag=RevenueCat|解锁|premium
 
 [Script]
-# 后端 entitlement / 配置注入
-http-response ^https?:\/\/www\.echo-loop\.top\/(api\/entitlements|api\/v1\/client\/config) script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/EchoLoop/echoloop.js, requires-body=true, timeout=10, tag=EchoLoop Inject Premium
-
-# 兜底: 任何含 entitlement/premium/plan 的响应
-http-response ^https?:\/\/www\.echo-loop\.top\/.*(entitlement|premium|plan) script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/EchoLoop/echoloop.js, requires-body=true, timeout=10, tag=EchoLoop Inject Backup
+http-request ^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/EchoLoop/EchoLoop_RC.js, timeout=10, tag=EchoLoop 解锁
 
 [MITM]
-hostname = %APPEND% www.echo-loop.top
+hostname = api.revenuecat.com
