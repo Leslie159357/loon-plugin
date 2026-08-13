@@ -96,6 +96,8 @@ try {
     obj.quota_remaining = 999999;
     obj.monthly_quota_used = 0;
     obj.remaining_quota = 999999;
+    obj.estimated_quota = 0;
+    obj.description = '预计消耗 0 配额';
     if (obj.quota_info && typeof obj.quota_info === 'object') {
       obj.quota_info.used = 0;
       obj.quota_info.total = 999999;
