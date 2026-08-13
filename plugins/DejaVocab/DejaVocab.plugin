@@ -1,29 +1,35 @@
 #!name=DejaVocab Unlock
-#!desc=解锁 DejaVocab VIP、语感网络、无限额度 (dejavocab.cn 域名修复版)
+#!desc=解锁 DejaVocab VIP、无限额度、语法分析(AI转发) — dejavocab.cn
 #!author=Minis
 #!home=https://dejavocab.com
 #!icon=https://dejavocab.com/favicon.ico
-#!version=3.1
+#!version=4.0
 #!date=2026-08-14
 
 [MITM]
 hostname = %APPEND% dejavocab.cn,dejavocab.com
 
 [Script]
-# 订阅状态（核心）
-http-response ^https?://dejavocab\.(cn|com)/api/subscription/status script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+# ★ 语法分析：请求转发到免费 AI 接口
+http-request ^https?://dejavocab\.(cn|com)/api/grammar-analysis/ script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=10, tag=DejaVocab Grammar Forward
 
-# 收据验证（服务端合并订阅判定）
-http-response ^https?://dejavocab\.(cn|com)/api/subscription/verify-receipt script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+# ★ AI 转发响应：SSE 流 -> 语法分析 JSON
+http-response ^https?://dejavocab\.(cn|com)/api/ai/streaming/deja/ script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Grammar Convert
+
+# 订阅状态（核心）
+http-response ^https?://dejavocab\.(cn|com)/api/subscription/status script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Sub
 
 # 配额
-http-response ^https?://dejavocab\.(cn|com)/(api/)?quota script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+http-response ^https?://dejavocab\.(cn|com)/(api/)?quota script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Quota
+
+# 翻译/短语 quota_used 归零
+http-response ^https?://dejavocab\.(cn|com)/api/(rolling-translation|rolling-phrase-extraction) script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Roll
 
 # 用户资料
-http-response ^https?://dejavocab\.(cn|com)/api/(user-profile|account) script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+http-response ^https?://dejavocab\.(cn|com)/api/(user-profile|account) script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Profile
 
 # 语感网络
-http-response ^https?://dejavocab\.(cn|com)/api/colbert script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+http-response ^https?://dejavocab\.(cn|com)/api/colbert script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Colbert
 
 # 短语
-http-response ^https?://dejavocab\.(cn|com)/api/user-phrases script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+http-response ^https?://dejavocab\.(cn|com)/api/user-phrases script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Phrases
