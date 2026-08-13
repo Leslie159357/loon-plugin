@@ -79,7 +79,9 @@ try {
     obj.is_premium = true;
     obj.subscription_type = 'lifetime_ultra';
     obj.quota_limit = 999999;
+    obj.quota_used = 0;
     obj.quota_remaining = 999999;
+    obj.total_system_api_used = 0;
     obj.end_date = '2099-12-31T23:59:59Z';
     obj.apple_product_id = 'com.dejavocab.app.lifetime_ultra';
     obj.lifetime_member_number = 'VIP-00001';
