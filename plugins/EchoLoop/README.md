@@ -11,28 +11,37 @@ Bundle ID: `top.echo-loop` · v1.0.24+
 ✅ 无限 AI 学习额度
 ✅ 全部付费功能
 
-## 原理
+## 原理（v1.0.29 起）
 
-劫持 RevenueCat API `api.revenuecat.com/v1/subscribers/{id}` 响应，返回伪造的 `premium` entitlement（`is_active: true`）。App 使用 RevenueCat SDK 且 **未做 SSL Pinning**（`NSAllowsArbitraryLoads = true`），MITM 开箱即用。
+判定链（源码确认，[echo-loop/Echo-Loop](https://github.com/echo-loop/Echo-Loop) 开源）：
 
-> 该 App 源码完全开源（[echo-loop/Echo-Loop](https://github.com/echo-loop/Echo-Loop)），Entitlement identifier 已验证为 `premium`。
+- **唯一权威源 = 后端 `GET /api/entitlements`**（服务端合并 RevenueCat + Paddle 权益），响应 `{ isPremium, entitlementIds, productId, expiresAtMs, willRenew, source, purchaseType }`，2xx 即权威直接覆盖本地缓存
+- RevenueCat 只负责购买流程，**不参与会员判定**（实测伪造 RC 缓存/事件全部无效）
+- 本地缓存（Keychain secure_storage）仅离线兜底
+- ⚠️ **匿名用户直接判 free**（`userId==null → Entitlement.free`）→ **必须先在 app 内登录账号**
+
+插件双路劫持：
+1. `echoloop_backend.js` — 伪造后端 `/api/entitlements` 响应为 premium（主方案）
+2. `EchoLoop_RC.js` — RC 劫持（老版本兼容，保留）
 
 ## 文件说明
 
 | 文件 | 用途 |
 |------|------|
-| `EchoLoop_RC.js` | 核心劫持脚本（http-request 直接返回伪造数据） |
-| `EchoLoop.plugin` | Loon 插件（主推荐） |
+| `echoloop_backend.js` | 后端 `/api/entitlements` 响应伪造（新版主方案） |
+| `EchoLoop_RC.js` | RC 劫持（老版本兼容） |
+| `EchoLoop.plugin` | Loon 插件（双路，主推荐） |
 | `EchoLoop_qx.conf` | Quantumult X 引用配置 |
 | `EchoLoop_sg.sgmodule` | Surge 模块 |
 
 ## 安装（Loon）
 
-1. 将 `EchoLoop_RC.js` 放入 Loon 的 `Scripts` 目录
+1. 将 `echoloop_backend.js` + `EchoLoop_RC.js` 放入 Loon 的 `Scripts` 目录
 2. 导入 `EchoLoop.plugin`
-3. 开启 MITM，hostname 已自动添加 `api.revenuecat.com`
+3. 开启 MITM，hostname 已自动添加 `api.revenuecat.com, www.echo-loop.top`
 4. 安装并信任 CA 证书
-5. 打开 Echo Loop → 全部功能已解锁 ✅
+5. **登录 Echo Loop 账号**（匿名用户不走后端判定，直接 free）
+6. 打开 Echo Loop → 全部功能已解锁 ✅
 
 ## 安装（Quantumult X）
 
