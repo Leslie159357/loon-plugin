@@ -1,13 +1,29 @@
 #!name=DejaVocab Unlock
-#!desc=解锁 DejaVocab VIP、语感网络、无限额度
+#!desc=解锁 DejaVocab VIP、语感网络、无限额度 (dejavocab.cn 域名修复版)
 #!author=Minis
 #!home=https://dejavocab.com
 #!icon=https://dejavocab.com/favicon.ico
-#!version=3.0
-#!date=2026-05-24
+#!version=3.1
+#!date=2026-08-14
 
 [MITM]
-hostname = dejavocab.com
+hostname = %APPEND% dejavocab.cn,dejavocab.com
 
 [Script]
-http-response ^https?://dejavocab\.com/api/(subscription/status|user-profile|colbert/index-status|colbert/build-index|user-phrases) script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+# 订阅状态（核心）
+http-response ^https?://dejavocab\.(cn|com)/api/subscription/status script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+
+# 收据验证（服务端合并订阅判定）
+http-response ^https?://dejavocab\.(cn|com)/api/subscription/verify-receipt script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+
+# 配额
+http-response ^https?://dejavocab\.(cn|com)/(api/)?quota script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+
+# 用户资料
+http-response ^https?://dejavocab\.(cn|com)/api/(user-profile|account) script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+
+# 语感网络
+http-response ^https?://dejavocab\.(cn|com)/api/colbert script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
+
+# 短语
+http-response ^https?://dejavocab\.(cn|com)/api/user-phrases script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60
