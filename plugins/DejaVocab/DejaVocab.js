@@ -108,10 +108,12 @@ try {
     obj.quota_used = 0;
     if (obj.data && typeof obj.data === 'object') obj.data.quota_used = 0;
   }
-  else if (url.includes('/api/user-profile/') || url.includes('/api/account/')) {
-    obj.is_paid = true;
-    obj.is_premium = true;
-    obj.subscription_type = 'ultra';
+  else if (url.includes('/api/user-profile/')) {
+    // 保守：只改已有字段，不新增（避免破坏 Codable 解码）
+    if (obj.subscription_type) obj.subscription_type = 'lifetime_ultra';
+    if ('is_paid' in obj) obj.is_paid = true;
+    if ('is_premium' in obj) obj.is_premium = true;
+    if ('subscription_display' in obj) obj.subscription_display = 'Ultra';
   }
   else if (url.includes('/api/colbert/')) {
     obj.feature_locked = false;

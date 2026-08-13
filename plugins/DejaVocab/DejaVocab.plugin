@@ -26,7 +26,7 @@ http-response ^https?://dejavocab\.(cn|com)/(api/)?quota script-path=https://raw
 http-response ^https?://dejavocab\.(cn|com)/api/(rolling-translation|rolling-phrase-extraction) script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Roll
 
 # 用户资料
-http-response ^https?://dejavocab\.(cn|com)/api/(user-profile|account) script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Profile
+http-response ^https?://dejavocab\.(cn|com)/api/user-profile script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Profile
 
 # 语感网络
 http-response ^https?://dejavocab\.(cn|com)/api/colbert script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/DejaVocab/DejaVocab.js, requires-body=true, timeout=60, tag=DejaVocab Colbert
