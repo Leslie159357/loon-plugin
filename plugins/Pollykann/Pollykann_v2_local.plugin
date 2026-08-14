@@ -1,0 +1,15 @@
+#!name=Pollykann 会员解锁 v2
+#!desc=解锁 Pollykann 英语视频学习会员 - 逆向确认判定链(UserDefaults pollykannVipExpireDate) + 接口注入 + gzip防护
+#!author=Minis
+#!home=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/Pollykann
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/04/2a/5b/042a5b37-af7c-5bf7-fe4f-f7b1ada8e14b/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.png
+#!date=2026-08-14
+#!tag=unlock,学习,英语,视频
+
+[Script]
+http-request ^https?:\/\/(api|h5|www|s|u|video)\.(pollykann|yingyutingting)\.com\/.* script-path=pollykann_identity.js, timeout=5, tag=Pollykann_NoGzip
+
+http-response ^https?:\/\/api\.(pollykann|yingyutingting)\.com\/(home|vip\/productList|vip\/applePay|device\/veryDevice|account\/stream|appConfig\/stream|media|.*) script-path=pollykann_v2.js, requires-body=true, timeout=10, tag=Pollykann_VIP
+
+[MITM]
+hostname = %APPEND% api.pollykann.com, api.yingyutingting.com, h5.pollykann.com, www.pollykann.com, s.pollykann.com, u.pollykann.com, video.pollykann.com

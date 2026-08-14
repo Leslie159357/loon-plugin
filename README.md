@@ -26,4 +26,4 @@
 | [FocusFlight 订阅破解](plugins/FocusFlight/FocusFlight_RevenueCat.plugin) | FocusFlight | 解锁全部 Pro/Premium/Plus/All-Access 权益 |
 | [EchoLoop](plugins/EchoLoop) | Echo Loop | 解锁 Premium（AI 翻译/词典/解析等全部付费功能） |
 | [TheGreatMe](plugins/TheGreatMe/TheGreatMe_Unlock.loon.plugin) | TheGreatMe | 永久解锁会员（RevenueCat 定制版，premium+pro 双权益） |
-| [Pollykann 会员解锁 v2](plugins/Pollykann/Pollykann_v2.plugin) | Pollykann (英语视频学习) | 解锁VIP会员 - 判定链逆向确认(UserDefaults pollykannVipExpireDate) + 接口注入 + gzip防护 |
+| [Pollykann 会员解锁 v2](plugins/Pollykann/Pollykann_v2.plugin)（[本地导入版](plugins/Pollykann/Pollykann_v2_local.plugin)） | Pollykann (英语视频学习) | 解锁VIP会员 - 判定链逆向确认(UserDefaults pollykannVipExpireDate) + 接口注入 + gzip防护 |
