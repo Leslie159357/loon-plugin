@@ -2,6 +2,7 @@ let body = $response.body;
 if (!body) { $done({}); return; }
 
 try {
+  console.log('[EFHello] http-response fired: ' + $request.url);
   // RC RevenueCat
   if ($request.url.indexOf('api.rc-backup.com') >= 0) {
     if ($request.url.indexOf('/v1/subscribers/') >= 0 && $request.url.indexOf('/attributes') < 0 && $request.url.indexOf('/offerings') < 0 && $request.url.indexOf('/identify') < 0) {
