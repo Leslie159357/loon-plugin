@@ -6,8 +6,11 @@
 
 const TRUE_VALUES = { membership: 'PLUS' }; // membership:"NONE"|"BASIC" → "PLUS"
 
-// 锁定类字段：true → false（解锁内容）
-const UNLOCK_FALSE = ['membershipOnly', 'isMembershipOnly', 'restrictedNow', 'restrictedAfterFreeTrial'];
+// 锁定类字段：true → false（解锁内容；含抓包新发现的 membershipOnlyPlaylist/membershipOnlySentence）
+const UNLOCK_FALSE = [
+  'membershipOnly', 'isMembershipOnly', 'restrictedNow', 'restrictedAfterFreeTrial',
+  'membershipOnlyPlaylist', 'membershipOnlySentence',
+];
 
 // 票数类字段：改大
 const BIG_NUMBERS = ['membershipTickets', 'familyMembershipTickets', 'freeTrialTickets', 'familyFreeTrialTickets'];
