@@ -1,21 +1,19 @@
 #!name=Trakt VIP 解锁
-#!desc=Trakt 3.9 VIP 解锁：伪造 api.trakt.tv 用户资料 vip 字段（判定链：服务器响应 → 本地 userSettingIsVIP → isVIP）
+#!desc=Trakt 3.9 VIP 解锁：伪造 apiz.trakt.tv /users/settings 响应 user.vip 字段（判定链：服务器响应 → 本地 userSettingIsVIP → isVIP）
 #!system=ios
-#!version=1.0.1
+#!version=2.0.0
 #!author=Minis
 
 [Script]
 # 请求头：强制 identity 编码，防 gzip 导致响应脚本失效（AWS 后端坑）
-http-request ^https?:\/\/api\.trakt\.tv\/users\/me($|\?) script-path=trakt_req.js, timeout=10, tag=TraktVIP_req
+http-request ^https?:\/\/(api|apiz)\.trakt\.tv\/users\/settings($|\?) script-path=trakt_req.js, timeout=10, tag=TraktVIP_req
 
-# 用户资料响应伪造（vip/vip_ep/vip_years/vip_cover_image → true/99）
-http-response ^https?:\/\/api\.trakt\.tv\/users\/me($|\?) script-path=trakt_vip.js, requires-body=true, timeout=10, tag=TraktVIP_me
+# ★ 核心端点：用户资料+设置响应（vip/vip_ep/vip_years/vip_cover_image → true/99）
+#   实测域名是 apiz.trakt.tv（不是 api.trakt.tv！），响应结构 {"user": {...}, "account": {...}}
+http-response ^https?:\/\/(api|apiz)\.trakt\.tv\/users\/settings($|\?) script-path=trakt_vip.js, requires-body=true, timeout=10, tag=TraktVIP_settings
 
-# 设置响应（含 user 对象时也伪造）
-http-response ^https?:\/\/api\.trakt\.tv\/users\/me\/settings($|\?) script-path=trakt_vip.js, requires-body=true, timeout=10, tag=TraktVIP_settings
-
-# 用户资料兜底：/users/{username} /users/refresh 等（脚本只改含 vip 字段的对象）
-http-response ^https?:\/\/api\.trakt\.tv\/users\/[a-zA-Z0-9_@.-]+($|\?) script-path=trakt_vip.js, requires-body=true, timeout=10, tag=TraktVIP_user
+# 兜底：其他可能带 user 对象的端点
+http-response ^https?:\/\/(api|apiz)\.trakt\.tv\/users\/me($|\?) script-path=trakt_vip.js, requires-body=true, timeout=10, tag=TraktVIP_me
 
 [MITM]
 hostname = %APPEND% api.trakt.tv, apiz.trakt.tv
