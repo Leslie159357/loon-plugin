@@ -1,38 +1,36 @@
-// LinguoLand 会员解锁 — http-response 脚本（v2 全面版）
-// 覆盖接口:
-//   GET /api/v1/auth/quota-status  → tier=MEMBER + 无限配额 + 永久会员 + used 清零
-//   GET /api/v1/credits            → balance 点数放大 + freeQuota 放大 + membership 永久
-//   GET /api/v1/auth/profile       → tier=MEMBER 兜底
-// 判定链: 服务器 quota-status.tier 字段 (MEMBER=会员)
+// LinguoLand 会员解锁 — http-response 脚本 v3
+// 覆盖:
+//   /api/v1/auth/quota-status → tier=MEMBER + 配额无限 + used 清零 + 会员永久
+//   /api/v1/credits          → balance 点数无限 + freeQuota 放大 + lifetime
+//   /api/v1/auth/profile     → tier=MEMBER 兜底
+// 判定链: 服务器 quota-status.tier (MEMBER=会员)
 
-function future(ms) { return ms ? '2099-12-31T16:00:00.000Z' : 4102444800000; }
+function futureStr() { return '2099-12-31T16:00:00.000Z'; }
 
 function unlockQuotaStatus(data) {
-  var futureStr = '2099-12-31T16:00:00.000Z';
   data.tier = 'MEMBER';
   ['ENRICH', 'TRANSLATE', 'CHAT'].forEach(function(k) {
     if (data.quotas && data.quotas[k]) {
       data.quotas[k].limit = 999999999;
       data.quotas[k].used = 0;
       data.quotas[k].remaining = 999999999;
-      data.quotas[k].resetAt = futureStr;
+      data.quotas[k].resetAt = futureStr();
     }
   });
-  data.cost = { ceilingCents: 99999999, usedCents: 0, remainingCents: 99999999, resetAt: futureStr };
-  data.membership = { paidUntil: futureStr, daysLeft: 99999, isLifetime: true };
+  data.cost = { ceilingCents: 99999999, usedCents: 0, remainingCents: 99999999, resetAt: futureStr() };
+  data.membership = { paidUntil: futureStr(), daysLeft: 99999, isLifetime: true };
   return data;
 }
 
 function unlockCredits(data) {
-  var futureStr = '2099-12-31T16:00:00.000Z';
-  data.balance = 999999999;              // AI 点数无限
-  data.illustrationCost = 0;             // 插画免费
-  data.listenCharsPerCoin = 999999999;   // 听书几乎不耗点
+  data.balance = 999999999;
+  data.illustrationCost = 0;
+  data.listenCharsPerCoin = 999999999;
   data.bilingualWordsPerCredit = 999999999;
   data.freeQuota = { ENRICH: 999999, TRANSLATE: 999999, CHAT: 999999 };
   if (data.membership) {
     if (data.membership.current) {
-      data.membership.current.paidUntil = futureStr;
+      data.membership.current.paidUntil = futureStr();
       data.membership.current.daysLeft = 99999;
       data.membership.current.isLifetime = true;
     }
@@ -42,10 +40,8 @@ function unlockCredits(data) {
   return data;
 }
 
-// 深度替换兜底（profile / me-snapshot / 其他）
 function deepUnlock(obj) {
   if (!obj || typeof obj !== 'object') return;
-  var futureStr = '2099-12-31T16:00:00.000Z';
   Object.keys(obj).forEach(function(k) {
     var v = obj[k];
     if (k === 'tier' || k === 'planType' || k === 'currentTier' || k === 'type') {
@@ -57,7 +53,7 @@ function deepUnlock(obj) {
       if (v === false || v === 0 || v === null) obj[k] = true;
     }
     if (k === 'paidUntil' || k === 'expiresAt' || k === 'expireAt' || k === 'endTime' || k === 'renewAt' || k === 'validUntil') {
-      if (typeof v === 'string') obj[k] = futureStr;
+      if (typeof v === 'string') obj[k] = futureStr();
       if (typeof v === 'number') obj[k] = 4102444800000;
     }
     if (k === 'daysLeft' || k === 'balance' || k === 'remaining') obj[k] = 999999999;
@@ -80,8 +76,6 @@ try {
     deepUnlock(data);
   }
   body = JSON.stringify(data);
-} catch (e) {
-  // 非 JSON (SSE 流式等) 原样放行
-}
+} catch (e) {}
 
 $done({ body: body });

@@ -1,15 +1,15 @@
 #!name=LinguoLand 会员解锁
-#!desc=LinguoLand (com.linguoland.app) 会员+AI点数解锁 v2：伪造 quota-status (tier/配额) + credits (AI点数) + profile (tier兜底)。判定链在服务器，无需注入 dylib。
+#!desc=LinguoLand (com.linguoland.app) 会员+AI点数解锁 v3：quota-status (tier/配额) + credits (AI点数/防gzip) + profile (tier兜底)。服务器判定，无需注入。
 #!system=ios
-#!version=2.0.0
+#!version=3.0.0
 #!date=2026-08-14
 #!author=Minis
 #!homepage=https://github.com/Leslie159357/loon-plugin
-#!logo=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@f7b74565c512e4f59c610f21fc97c6545fc35775/plugins/LinguoLand/LinguoLand.png
+#!logo=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@8e0ea543c40a785e7e08fac5bce14e63dcaf302a/plugins/LinguoLand/LinguoLand.png
 
 [Script]
-http-request ^https?:\/\/api\.linguoland\.com\/api\/v1\/(auth\/quota-status|credits|auth\/profile) script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@f7b74565c512e4f59c610f21fc97c6545fc35775/plugins/LinguoLand/linguoland_nocache.js, timeout=5, tag=LinguoLand-NoCache
-http-response ^https?:\/\/api\.linguoland\.com\/api\/v1\/(auth\/quota-status|credits|auth\/profile) script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@f7b74565c512e4f59c610f21fc97c6545fc35775/plugins/LinguoLand/linguoland_unlock.js, requires-body=true, timeout=10, tag=LinguoLand-Unlock
+http-request ^https?:\/\/api\.linguoland\.com\/api\/v1\/(auth\/quota-status|credits|auth\/profile) script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@8e0ea543c40a785e7e08fac5bce14e63dcaf302a/plugins/LinguoLand/linguoland_nocache.js, timeout=5, tag=LinguoLand-NoCache
+http-response ^https?:\/\/api\.linguoland\.com\/api\/v1\/(auth\/quota-status|credits|auth\/profile) script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@8e0ea543c40a785e7e08fac5bce14e63dcaf302a/plugins/LinguoLand/linguoland_unlock.js, requires-body=true, timeout=10, tag=LinguoLand-Unlock
 
 [MITM]
 hostname = %APPEND% api.linguoland.com
