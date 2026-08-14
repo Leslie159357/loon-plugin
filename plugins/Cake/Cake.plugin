@@ -1,5 +1,5 @@
 #!name=Cake Plus Unlocker
-#!desc=劫持 Cake AI英语学习 后端接口解锁会员（RN+Hermes+NitroIAP，ObjC 无 hook 点，Loon 唯一方案）。v2: 抓包确认真实域名 api.mycake.me + api.cakeapp.me；伪造 membership=PLUS + 解锁内容锁定字段 + 票数/爱心
+#!desc=劫持 Cake AI英语学习 后端接口解锁会员（RN+Hermes+NitroIAP，ObjC 无 hook 点，Loon 唯一方案）。v2.1: 抓包确认真实域名 api.mycake.me + api.cakeapp.me；伪造 membership=PLUS + 解锁内容锁定字段（含 membershipOnlyPlaylist/Sentence）+ 票数/爱心
 #!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/5b/49/2d/5b492d21-c5e7-4cd2-9c76-bd15a9cdf8de/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/460x0w.webp
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/loon-plugin
@@ -7,7 +7,8 @@
 
 [Script]
 # Cake 后端全部接口：会员状态伪造 + 内容锁定解除 + 票数/爱心
-http-response ^https?:\/\/[^/]*(mycake\.me|cakeapp\.me|mycake\.plus|cloudfront\.net|cake\.day)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Cake/cake.js, requires-body=true, timeout=15, tag=Cake Plus 解锁
+# script-path 用固定 commit（b177777），避免 jsdelivr @main 缓存旧脚本
+http-response ^https?:\/\/[^/]*(mycake\.me|cakeapp\.me|mycake\.plus|cloudfront\.net|cake\.day)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@b177777349b8b91a04b01d88576e2c8e9f20e4ec/plugins/Cake/cake.js, requires-body=true, timeout=15, tag=Cake Plus 解锁
 
 [MITM]
 hostname = %APPEND% api.mycake.me, api.cakeapp.me, *.mycake.me, *.cakeapp.me, snack-video.cakeapp.me, d162pjbd816bzl.cloudfront.net, api.mycake.plus, *.mycake.plus, *.cake.day, static-mycake.pstatic.net
