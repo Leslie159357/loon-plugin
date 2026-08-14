@@ -10,15 +10,32 @@ try {
   function sjget(k) { try { var s = sget(k); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
   function sjset(k, o) { sset(k, JSON.stringify(o)); }
 
+  // base64url 解码 (零依赖, 兼容所有 JS 环境)
+  function b64uDecode(s) {
+    var b64 = s.replace(/-/g, '+').replace(/_/g, '/');
+    while (b64.length % 4) b64 += '=';
+    var bin = '';
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    for (var i = 0; i < b64.length; i += 4) {
+      var c1 = chars.indexOf(b64[i]), c2 = chars.indexOf(b64[i+1]), c3 = chars.indexOf(b64[i+2]), c4 = chars.indexOf(b64[i+3]);
+      var b1 = (c1 << 2) | (c2 >> 4);
+      var b2 = ((c2 & 15) << 4) | (c3 >> 2);
+      var b3 = ((c3 & 3) << 6) | c4;
+      bin += String.fromCharCode(b1);
+      if (c3 >= 0 && c3 !== 64) bin += String.fromCharCode(b2);
+      if (c4 >= 0 && c4 !== 64) bin += String.fromCharCode(b3);
+    }
+    return bin;
+  }
+
   // StartStudySession 请求变量里的 sectionId (JWT studySectionToken)
   function getSectionIdFromReq() {
     try {
       var req = JSON.parse($request.body);
       var token = req.variables && req.variables.input && req.variables.input.studySectionToken;
       if (!token) return null;
-      var payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-      while (payload.length % 4) payload += '=';
-      var j = JSON.parse(atob(payload));
+      var payload = token.split('.')[1];
+      var j = JSON.parse(b64uDecode(payload));
       return j.section && j.section.sectionId;
     } catch (e) { return null; }
   }
@@ -167,6 +184,8 @@ try {
     return;
   }
 
-} catch(e) {}
+} catch(e) {
+  console.log('[EFHello] ERROR: ' + e);
+}
 
 $done({});
