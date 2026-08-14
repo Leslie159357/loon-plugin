@@ -31,6 +31,14 @@ function fakeBody(body, url) {
     let changed = false;
     const isHeart = /\/heart\b/.test(url);
 
+    // /heart 类接口：服务器扣到 0 后返回 {"result":"FAILURE"}（无 data）→ 伪造成 SUCCESS + 999
+    if (isHeart && obj && obj.result === 'FAILURE') {
+      obj.result = 'SUCCESS';
+      obj.data = { count: 999, maximumCount: 999, regenerationTime: 18000, regenerationTimeRemaining: 0 };
+      changed = true;
+      log('HEART-FAILURE->SUCCESS ' + url.slice(0, 90));
+    }
+
     function walk(o, path) {
       if (!o || typeof o !== 'object') return;
       if (Array.isArray(o)) { o.forEach((v, i) => walk(v, path + '[' + i + ']')); return; }
