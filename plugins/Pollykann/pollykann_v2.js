@@ -1,16 +1,14 @@
-// Pollykann 会员解锁 v2.0 (2026-08-14)
-// 逆向确认的判定链:
-//   checkIsVipMemberWith: → IAPService.vipAvailable → UserDefaults["pollykannVipExpireDate"] (NSDate)
-//   UserDefaults 值由服务器同步写入 (VIP 数据源 = account/stream, AES 加密)
-// 策略:
-//   1. /home 等明文接口: 注入全套 VIP 字段 (vipEndTimestamp/vipExpireDate/vipState/isVip)
-//   2. account/stream + appConfig/stream: AES 加密, 透传 + 打印加密体供分析
-//   3. 递归改写: 任何 JSON 响应中的 vip 时间/状态字段统一改为 2099/1
-// 注意: 配合 pollykann_identity.js (http-request 强制 Accept-Encoding: identity, 防 gzip)
+// Pollykann 会员解锁 v3.0 (2026-08-15)
+// 抓包确认的判定链:
+//   /account/sign 返回 PlkAccountInfo (含 pollykannVipState/vipType/vipEndTimestamp 等可选字段)
+//   -> 客户端解码 -> 写入 UserDefaults["pollykannVipExpireDate"] (NSDate)
+//   -> vipAvailable 读日期 > now 即会员
+// 免费用户响应里 VIP 字段缺失(nil) -> 脚本必须【新增】字段, 不能只改写已有字段
+// v3 修改: /account/sign 强制注入 vipEndTimestamp=2099 + pollykannVipState=1 + vipType=5
+//          /home 同样强制注入; 其他 JSON 递归改写已有 vip 字段
 
-// ====== 递归伪造 vip 字段 ======
 var TARGET_KEYS = {
-    'vipendtimestamp': 4070908800,      // 2099-01-01 epoch 秒
+    'vipendtimestamp': 4070908800,
     'vip_end_timestamp': 4070908800,
     'vipexpiredate': 4070908800,
     'vip_expire_date': 4070908800,
@@ -54,52 +52,66 @@ function walk(obj) {
     }
 }
 
+// 强制注入 VIP 字段 (针对用户信息类响应, 免费用户缺这些字段)
+function injectVip(obj) {
+    if (!obj) return;
+    var d = obj.data || obj;
+    d.pollykannVipState = 1;
+    d.vipType = 5;
+    d.vipStartTimestamp = 0;
+    d.vipEndTimestamp = 4070908800;       // 2099-01-01 epoch 秒
+    d.vipExpireDate = '2099-12-31 23:59:59';
+    d.isVip = 1;
+}
+
 var url = $request.url;
-var isStream = url.indexOf('/account/stream') !== -1 || url.indexOf('/appConfig/stream') !== -1;
 
 if ($response && $response.body) {
     var body = $response.body;
-    // AES 加密接口: 透传, 打印加密体 (base64 长度) 供抓包分析
-    if (isStream) {
-        console.log('Pollykann: ' + (url.indexOf('/account/stream') !== -1 ? 'account' : 'appConfig') + '/stream encrypted, len=' + body.length + ' head=' + body.substring(0, 32));
+    // AES 加密接口: 透传诊断
+    if (url.indexOf('/account/stream') !== -1 || url.indexOf('/appConfig/stream') !== -1) {
+        console.log('Pollykann: encrypted stream, len=' + body.length);
         $done({});
         return;
     }
     var obj = null;
     try { obj = JSON.parse(body); } catch (e) { $done({}); return; }
 
-    // 1. /home 首页: 注入 VIP 字段 (响应可能含 data 包裹)
-    if (url.indexOf('/home') !== -1) {
-        console.log('Pollykann: home intercepted');
-        walk(obj);
-        var d = obj.data || obj;
-        d.isVip = 1;
-        d.vipExpireDate = '2099-12-31 23:59:59';
-        d.vipEndTimestamp = 4070908800;
-        d.vipType = 5;
+    // 1. /account/sign 用户信息: 强制注入 VIP 字段 (判定数据源!)
+    if (url.indexOf('/account/sign') !== -1) {
+        console.log('Pollykann: account/sign injected vip fields');
+        injectVip(obj);
         $done({ body: JSON.stringify(obj) });
         return;
     }
-    // 2. /vip/productList 商品列表: 终身/年费商品标记已购买
+    // 2. /home 首页: 注入 VIP 字段
+    if (url.indexOf('/home') !== -1) {
+        console.log('Pollykann: home injected');
+        injectVip(obj);
+        walk(obj);
+        $done({ body: JSON.stringify(obj) });
+        return;
+    }
+    // 3. LeanCloud users/me: 注入 VIP 字段 (双保险)
+    if (url.indexOf('/1.1/users/me') !== -1) {
+        console.log('Pollykann: users/me injected');
+        injectVip(obj);
+        $done({ body: JSON.stringify(obj) });
+        return;
+    }
+    // 4. /vip/productList 商品列表
     if (url.indexOf('/vip/productList') !== -1) {
-        console.log('Pollykann: productList intercepted');
+        console.log('Pollykann: productList');
         walk(obj);
         if (obj.data && obj.data.length) {
             for (var i = 0; i < obj.data.length; i++) {
-                obj.data[i].isOpenBuy = false;
-                if (obj.data[i].id === 19) obj.data[i].isOpenBuy = false;
+                if (obj.data[i]) obj.data[i].isOpenBuy = false;
             }
         }
         $done({ body: JSON.stringify(obj) });
         return;
     }
-    // 3. /device/veryDevice 设备验证: 透传 (不伪造, 防副作用)
-    if (url.indexOf('/device/veryDevice') !== -1) {
-        console.log('Pollykann: device verify passthrough');
-        $done({});
-        return;
-    }
-    // 4. 其他 JSON: 递归改写 vip 字段 (广撒网)
+    // 5. 其他 JSON: 递归改写已有 vip 字段
     walk(obj);
     var newBody = JSON.stringify(obj);
     if (newBody !== body) {
