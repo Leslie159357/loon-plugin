@@ -16,7 +16,7 @@
 | [ELSA Speak](plugins/ELSA-Speak/elsa.plugin) | ELSA Speak | 解锁Pro |
 | [墨墨背单词](plugins/Mimio/mimio.plugin) | 墨墨背单词 | 解锁 |
 | [FitRead](plugins/FitRead/fitread.plugin) | 流利阅读 | 解锁VIP |
-| [EF Hello](plugins/EF-Hello/ef_hello.plugin) | EF Hello | 解锁 |
+| [EF Hello](plugins/EF-Hello/plugin.properties) | EF Hello | 解锁会员 + 课程解锁 + 进度解锁下一课 |
 | [Memrise](plugins/Memrise/memrise.plugin) | Memrise | 解锁 |
 | [DejaVocab](plugins/DejaVocab/DejaVocab.plugin) | DejaVocab | 解锁 |
 | [InkerSpeak](plugins/InkerSpeak/inkerspeak.plugin) | InkerSpeak | 解锁 |

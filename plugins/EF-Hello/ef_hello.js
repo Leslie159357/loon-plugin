@@ -73,6 +73,7 @@ try {
         obj.premium.planType = 'PREMIUM';
         obj.premium.endTime = 4102329600000;
       }
+      if (obj.lockedInBucketAssignments && Array.isArray(obj.lockedInBucketAssignments)) { obj.lockedInBucketAssignments = []; }
       if (obj.points !== undefined && obj.points === 0) { obj.points = 99999; }
       
       Object.keys(obj).forEach(function(k) { fixAll(obj[k]); });
