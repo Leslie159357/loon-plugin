@@ -8,7 +8,7 @@
 [Script]
 # Cake 后端全部接口：会员状态伪造 + 内容锁定解除 + 票数/爱心
 # script-path 用固定 commit（b177777），避免 jsdelivr @main 缓存旧脚本
-http-response ^https?:\/\/[^/]*(mycake\.me|cakeapp\.me|mycake\.plus|cloudfront\.net|cake\.day)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@b177777349b8b91a04b01d88576e2c8e9f20e4ec/plugins/Cake/cake.js, requires-body=true, timeout=15, tag=Cake Plus 解锁
+http-response ^https?:\/\/[^/]*(mycake\.me|cakeapp\.me|mycake\.plus|cloudfront\.net|cake\.day)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@b177777349411b2576cf0d75c19e2950c9632d79/plugins/Cake/cake.js, requires-body=true, timeout=15, tag=Cake Plus 解锁
 
 [MITM]
 hostname = %APPEND% api.mycake.me, api.cakeapp.me, *.mycake.me, *.cakeapp.me, snack-video.cakeapp.me, d162pjbd816bzl.cloudfront.net, api.mycake.plus, *.mycake.plus, *.cake.day, static-mycake.pstatic.net
