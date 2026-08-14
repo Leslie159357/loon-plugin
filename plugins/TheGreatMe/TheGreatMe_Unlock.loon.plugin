@@ -6,11 +6,8 @@
 #!date=2026-08-14
 #!tag=premium,unlock,thegreatme,revenuecat
 
-[General]
-skip_proxy = *.revenuecat.com, *.rc-backup.com
-
 [MITM]
-hostname = *.revenuecat.com, *.rc-backup.com, api-paywalls.revenuecat.com, api-diagnostics.revenuecat.com
+hostname = api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, api-diagnostics.revenuecat.com
 skip_validation = true
 
 [Script]
