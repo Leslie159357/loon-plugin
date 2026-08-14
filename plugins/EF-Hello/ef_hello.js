@@ -65,8 +65,13 @@ try {
       if (obj.access && obj.access.policy === 'NONE') { obj.access.policy = 'FREE'; }
       if (obj.access && obj.access.policy === 'RESTRICTED') { obj.access.policy = 'FREE'; }
       if (obj.enrollment && obj.enrollment.isEnrolled === false) { obj.enrollment.isEnrolled = true; }
-      if (obj.__typename === 'SmartCourseProgress' && obj.completedSectionsCount === 0) { obj.completedSectionsCount = 1; }
-      if (obj.__typename === 'SmartCourseLessonProgress' && obj.completedSectionsCount === 0) { obj.completedSectionsCount = 1; }
+      // 所有 progress 打勾: isCompleted=true + completedSectionsCount=满
+      if (obj.progress && typeof obj.progress === 'object' && obj.progress.__typename && obj.progress.__typename.indexOf('Progress') >= 0) {
+        obj.progress.isCompleted = true;
+        if (obj.progress.completedSectionsCount !== undefined) {
+          obj.progress.completedSectionsCount = (obj.sectionsLength && obj.sectionsLength > 0) ? obj.sectionsLength : 1;
+        }
+      }
       
       // Viewer premium + points
       if (obj.premium && obj.premium.isEnabled !== undefined) {
