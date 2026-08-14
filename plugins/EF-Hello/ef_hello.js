@@ -140,16 +140,14 @@ try {
         sjset('EFH_map', secMap);
       }
 
-      // lesson 级进度: 本地完成数覆盖 (学完才打勾)
+      // lesson 级进度: 至少 1 解锁下一课 (顺序解锁链), 打勾只跟真实完成
       if (obj.__typename === 'SmartCourseLesson' && obj.id && obj.progress) {
         var n = lessonCnt[obj.id] || 0;
-        if (n > 0) {
-          if (obj.progress.completedSectionsCount === undefined || n > obj.progress.completedSectionsCount) {
-            obj.progress.completedSectionsCount = n;
-          }
-          if (obj.sectionsLength && obj.progress.completedSectionsCount >= obj.sectionsLength) {
-            obj.progress.isCompleted = true;
-          }
+        var cur = obj.progress.completedSectionsCount || 0;
+        var target = Math.max(cur, n, 1);
+        obj.progress.completedSectionsCount = target;
+        if (obj.sectionsLength && target >= obj.sectionsLength) {
+          obj.progress.isCompleted = true;
         }
       }
 
