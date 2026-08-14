@@ -2,31 +2,42 @@
 
 Cake AI 英语学习 6.8.1 —— 后端 API 判定型 app（RN + Hermes + NitroIAP/StoreKit2 + 自家后端）。
 
-## 判定链（逆向结论）
+## 判定链（逆向 + 抓包确认）
 
 - IAP：OpenIAP + NitroIAP（react-native-nitro-iap，JSI 桥）→ **ObjC 层无 hook 点**，dylib 路线不可行
-- 后端 API base：`https://d162pjbd816bzl.cloudfront.net/v18_prod`（CloudFront CDN，可能 CNAME 自 api.mycake.plus）
-- 订阅接口：
-  - `GET /v1/subscriptions/status/` ← UI 会员状态主来源
-  - `GET /v1/subscriptions/entitlements/`
-  - `POST /subscription/verifyReceipt`（App Store 收据验证）
-  - `GET /subscription/config`、`POST /subscription/connect`、`/subscription/finishPurchase`
-  - `GET /v2/main/subscription`
-- JS 端状态字段（Hermes HBC 字符串池提取）：`isMembershipUser` / `isSubscribed` / `isMembershipFreeTrial` / `isMembershipSuspendedNow` / `membershipEndDate` / `hasMembership` / `isMembershipOnly` / `activeSubscriptions`
-- 本地缓存：`getMembershipCache` / `clearMembership`（启动读取后由后端刷新）
+- **真实 API 域名（Loon 抓包确认）**：
+  - `api.mycake.me`（旧接口：/app/start、/heart、/main/learning/summary/v2、/snack/*）
+  - `api.cakeapp.me`（/gw/ 网关：/gw/v2/main/today、/gw/user/dashboard、/gw/subscription/*、/gw/path/main 等）
+- **会员状态权威字段 = `/app/start` 响应 `extra.membership`**：`NONE` / `BASIC` / `PLUS` / `FREE_TRIAL` → 伪造 `PLUS`
+- **内容锁定字段**（各内容接口逐项下发，服务器按用户状态实时判定）：
+  - `membershipOnly` / `isMembershipOnly` / `restrictedNow` / `restrictedAfterFreeTrial`（sentence/unit/step 级）
+- 其它：`/tutorbot/ticket/policy`（AI 对话票数）、`/heart`（爱心数量）
+
+## v2 伪造规则（保守：只改已存在字段值，不新增字段）
+
+| 字段 | 操作 |
+|---|---|
+| `membership` = NONE/BASIC/FREE_TRIAL | → `PLUS` |
+| `membershipOnly` / `isMembershipOnly` / `restrictedNow` / `restrictedAfterFreeTrial` = true | → `false`（解锁内容） |
+| `membershipTickets` / `familyMembershipTickets` / `freeTrialTickets` / `familyFreeTrialTickets` | → `999` |
+| `/heart` 的 `count` / `maximumCount` / `adHeartCount` | → `999` |
+
+所有 JSON 响应通配处理（非 JSON 自动跳过），脚本日志记录真实响应（`[Cake] RAW`）与伪造动作（`[Cake] MEMBERSHIP/UNLOCK/FAKED`）。
 
 ## 使用方法
 
-1. Loon → 插件 → 添加（本目录）→ 开启
-2. 打开 Cake app，登录后进入会员页
-3. **查看脚本日志**（Loon → 设置 → 脚本日志）：
-   - `[Cake] RESP <url>` = 命中的接口
-   - `[Cake] RAW <json>` = 真实响应（若没解锁，把 RAW 内容发我，我会精调字段）
-   - `[Cake] FIX/HEUR/FAKED` = 已伪造的字段
-4. 解锁成功 = 会员页显示 Plus / 功能解锁
+1. Loon → 插件 → 添加本插件（URL 见下）→ 开启，信任 MITM 证书
+2. 打开 Cake app，登录（Apple/Google 账号）→ 进会员页 + 播放会员专属内容
+3. 查看 Loon → 设置 → 脚本日志确认 `[Cake]` 行
+4. 若某功能仍锁定：把对应接口的 `[Cake] RAW` 日志发回，迭代补规则
 
-## 迭代说明
+## 安装 URL
 
-v1 为"记录 + 试探伪造"版：只改 JSON 中**已存在**的布尔/日期字段（不新增字段，避免 Codable 解码破坏），启发式匹配 membership/subscription/premium 等关键词。
+```
+https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/Cake/Cake.plugin
+```
 
-若 UI 未解锁，需要真实响应格式来精准伪造 —— 把脚本日志里 `[Cake] RAW` 行发回即可。
+备用（jsdelivr）：
+```
+https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Cake/Cake.plugin
+```
