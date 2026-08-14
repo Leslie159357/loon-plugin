@@ -1,0 +1,15 @@
+#!name=LinguoLand 会员解锁
+#!desc=LinguoLand (com.linguoland.app) 会员解锁：伪造 quota-status 响应 tier=MEMBER + 永久会员 + 超大配额。判定链在服务器，无需注入 dylib。
+#!system=ios
+#!version=1.0.0
+#!date=2026-08-14
+#!author=Minis
+#!homepage=https://github.com/Leslie159357/loon-plugin
+#!logo=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/LinguoLand/LinguoLand.png
+
+[Script]
+http-request ^https?:\/\/api\.linguoland\.com\/api\/v1\/auth\/quota-status script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/LinguoLand/linguoland_nocache.js, timeout=5, tag=LinguoLand-NoCache
+http-response ^https?:\/\/api\.linguoland\.com\/api\/v1\/auth\/quota-status script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/LinguoLand/linguoland_unlock.js, requires-body=true, timeout=10, tag=LinguoLand-Unlock
+
+[MITM]
+hostname = %APPEND% api.linguoland.com
