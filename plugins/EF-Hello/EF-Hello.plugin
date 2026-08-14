@@ -1,0 +1,22 @@
+#!name=EF Hello Premium Unlock v2
+#!desc=EF Hello 9.1.4 解锁：RC 会员(api.rc-backup.com premium) + 课程解锁(access.policy→FREE, isEnrolled→true, 进度伪造解锁下一课) + gzip 预防。抓包验证字段全命中
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/31/41/4a/31414a35-2d72-a787-9dd0-6ddd4f8e11aa/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg
+#!author=Leslie159357
+#!homepage=https://github.com/Leslie159357/loon-plugin
+#!tag=订阅|解锁|教育
+
+[Script]
+# 请求阶段：强制 Accept-Encoding: identity（防 gzip 响应体，脚本拿不到 body 的坑）
+http-request ^https?:\/\/api\.rc-backup\.com\/.* script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@745a101/plugins/EF-Hello/efhello_plain.js, timeout=5, tag=EFHello ForcePlain
+http-request ^https?:\/\/v2\.api\.hello\.ef\.(com|cn)\/.* script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@745a101/plugins/EF-Hello/efhello_plain.js, timeout=5, tag=EFHello ForcePlain
+
+# RevenueCat 代理：伪造 premium 会员
+http-response ^https?:\/\/api\.rc-backup\.com\/v1\/(subscribers|product_entitlement_mapping) script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@745a101/plugins/EF-Hello/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello RC
+http-response ^https?:\/\/api\.rc-backup\.com\/v1\/subscribers\/.+\/offerings script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@745a101/plugins/EF-Hello/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello Offerings
+http-response ^https?:\/\/api\.rc-backup\.com\/v1\/subscribers\/.+\/attributes script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@745a101/plugins/EF-Hello/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello Attributes
+
+# GraphQL：课程解锁（access.policy NONE/RESTRICTED→FREE, isEnrolled→true, 进度 0→1）+ premium.isEnabled→true + 404 错误拦截
+http-response ^https?:\/\/v2\.api\.hello\.ef\.(cn|com)\/graphql script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@745a101/plugins/EF-Hello/ef_hello.js, requires-body=true, timeout=120, tag=EF Hello GraphQL
+
+[MITM]
+hostname = %APPEND% api.rc-backup.com, v2.api.hello.ef.cn, v2.api.hello.ef.com, *.hello.ef.cn, *.hello.ef.com
