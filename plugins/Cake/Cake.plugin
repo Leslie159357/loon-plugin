@@ -7,7 +7,7 @@
 
 [Script]
 # 请求阶段：强制 Accept-Encoding: identity（api.cakeapp.me 是 AWS 网关，默认 gzip → Loon 响应脚本拿不到 body）
-http-request ^https?:\/\/[^/]*(mycake\.me|cakeapp\.me|mycake\.plus|cloudfront\.net|cake\.day)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Cake/force_plain.js, timeout=5, tag=Cake ForcePlain
+http-request ^https?:\/\/[^/]*(mycake\.me|cakeapp\.me|mycake\.plus|cloudfront\.net|cake\.day)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@1dbd9a702d61e9004642c0d65f73a1b792578977/plugins/Cake/force_plain.js, timeout=5, tag=Cake ForcePlain
 
 # Cake 后端全部接口：会员状态伪造 + 内容锁定解除 + 票数/爱心
 # script-path 用固定 commit（b177777），避免 jsdelivr @main 缓存旧脚本
