@@ -7,9 +7,9 @@
 #!tag=unlock,学习,英语,视频
 
 [Script]
-http-request ^https?:\/\/(api|h5|www|s|u|video)\.(pollykann|yingyutingting)\.com\/.* script-path=pollykann_identity.js, timeout=5, tag=Pollykann_NoGzip
+http-request ^https?:\/\/(api|h5|www|s|u|video)\.(pollykann|yingyutingting)\.com\/.* script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/Pollykann/pollykann_identity.js, timeout=5, tag=Pollykann_NoGzip
 
-http-response ^https?:\/\/api\.(pollykann|yingyutingting)\.com\/(home|vip\/productList|vip\/applePay|device\/veryDevice|account\/stream|appConfig\/stream|media|.*) script-path=pollykann_v2.js, requires-body=true, timeout=10, tag=Pollykann_VIP
+http-response ^https?:\/\/api\.(pollykann|yingyutingting)\.com\/(home|vip\/productList|vip\/applePay|device\/veryDevice|account\/stream|appConfig\/stream|media|.*) script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/Pollykann/pollykann_v2.js, requires-body=true, timeout=10, tag=Pollykann_VIP
 
 [MITM]
 hostname = %APPEND% api.pollykann.com, api.yingyutingting.com, h5.pollykann.com, www.pollykann.com, s.pollykann.com, u.pollykann.com, video.pollykann.com
