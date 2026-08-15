@@ -1,10 +1,16 @@
 // ==ClosureCopy==
 // ==/ClosureCopy==
 
-// Trancy MITM Plugin v2.1 - 修复 3/translations 403 + 细化所有已知 API 路径
+// Trancy MITM Plugin v2.2 - 静态分析修正版
 // MITM Domain: api.trancy.org, service.trancy.org, api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com
 //
-// 从抓包确认的关键接口:
+// v2.2 变更（2026-08-15 静态分析确认）:
+//   - user/profile 增加 premiumAI 字段伪造（Trancy 用户模型 premium/premiumAI 双字段，Profile 独立显示 Premium AI 状态）
+//   - RevenueCat 产品 ID 修正为 rc_lifetime/rc_annual/rc_six_month/rc_three_month/rc_two_month/rc_monthly/rc_weekly
+//     （从主二进制字符串分片还原，v2.1 的 com.trancy.app_* 为猜测值）
+//   - quota 增加 tokenQuota/transcriptionQuota/whisperx 字段
+//
+// 抓包确认的关键接口（v2.1）:
 // 1. api.trancy.org/1/user/profile?includeQuota=1  → premium: false → true
 // 2. api.trancy.org/2/translator/engines            → quota.balance=0 → 999999
 // 3. api.trancy.org/3/translations                  → code:403 → 200 (高级AI过期)
@@ -12,7 +18,10 @@
 // 5. service.trancy.org/1/user/profile              → premium: false → true
 // 6. api.rc-backup.com/v1/subscribers/{id}          → entitlements:{} → 填充pro
 
-const VERSION = "2.1";
+const VERSION = "2.2";
+
+// RC 产品 ID（静态分析确认）
+const RC_PRODUCTS = ["rc_lifetime", "rc_annual", "rc_six_month", "rc_three_month", "rc_two_month", "rc_monthly", "rc_weekly"];
 
 function main() {
   const url = $request.url;
@@ -33,7 +42,7 @@ function main() {
     return;
   }
   
-  console.log('[Trancy v2.1] Processing: ' + path);
+  console.log('[Trancy v2.2] Processing: ' + path);
   
   // ===== 1. /translations (3/4 translations - AI翻译接口) =====
   // 原始: {"code":403,"message":"高级 AI 已过期，请升级"}
@@ -57,6 +66,7 @@ function main() {
     if (!body.data) { $done({}); return; }
     const d = body.data;
     d.premium = true;
+    d.premiumAI = true;          // v2.2: Premium AI 独立状态
     d.stripePremiumActive = true;
     d.stripeAIEngineActive = true;
     d.subscription = "premium";
@@ -72,6 +82,9 @@ function main() {
       q.Google = 999999; q.DeepSeek = 999999; q.Meta = 999999; q.GLM = 999999;
       q.tokens = 999999; q.AIEngineExpired = 9999999999999; q.premiumExpired = 9999999999999;
     }
+    // v2.2: 用户模型 quota 字段（tokenQuota/transcriptionQuota/used/limit）
+    if (d.quota && d.quota.tokenQuota) { d.quota.tokenQuota.used = 0; d.quota.tokenQuota.limit = 999999; }
+    if (d.quota && d.quota.transcriptionQuota) { d.quota.transcriptionQuota.used = 0; d.quota.transcriptionQuota.limit = 999999; }
     if (d.quota && d.quota.AITokens) { d.quota.AITokens.used = 0; d.quota.AITokens.limit = 999999; }
     if (d.quota && d.quota.whisperx) { d.quota.whisperx.used = 0; d.quota.whisperx.limit = 999999; }
     if (d.quota && d.quota.pdf) { d.quota.pdf.used = 0; d.quota.pdf.limit = 999999; }
@@ -85,6 +98,7 @@ function main() {
     if (!body.data) { $done({}); return; }
     const d = body.data;
     d.premium = true;
+    d.premiumAI = true;          // v2.2
     d.stripePremiumActive = true;
     d.stripeAIEngineActive = true;
     d.subscription = "premium";
@@ -100,6 +114,8 @@ function main() {
       q.Google = 999999; q.DeepSeek = 999999; q.Meta = 999999; q.GLM = 999999;
       q.tokens = 999999; q.AIEngineExpired = 9999999999999; q.premiumExpired = 9999999999999;
     }
+    if (d.quota && d.quota.tokenQuota) { d.quota.tokenQuota.used = 0; d.quota.tokenQuota.limit = 999999; }
+    if (d.quota && d.quota.transcriptionQuota) { d.quota.transcriptionQuota.used = 0; d.quota.transcriptionQuota.limit = 999999; }
     if (d.quota && d.quota.AITokens) { d.quota.AITokens.used = 0; d.quota.AITokens.limit = 999999; }
     if (d.quota && d.quota.whisperx) { d.quota.whisperx.used = 0; d.quota.whisperx.limit = 999999; }
     if (d.quota && d.quota.pdf) { d.quota.pdf.used = 0; d.quota.pdf.limit = 999999; }
@@ -128,14 +144,14 @@ function main() {
     
     // 确保 entitlements
     if (!sub.entitlements) sub.entitlements = {};
-    for (const eid of ["pro", "premium", "plus", "all_access"]) {
+    for (const eid of ["pro", "premium", "premiumAI", "plus", "all_access"]) {
       if (!sub.entitlements[eid]) sub.entitlements[eid] = {};
       sub.entitlements[eid] = {
         ...sub.entitlements[eid],
         expires_date: "2099-12-31T23:59:59Z",
         purchase_date: "2024-06-10T00:00:00Z",
         latest_purchase_date: "2024-06-10T00:00:00Z",
-        product_identifier: sub.entitlements[eid]?.product_identifier || "com.trancy.app_yearly",
+        product_identifier: sub.entitlements[eid]?.product_identifier || "rc_annual",
         is_active: true, will_renew: true, is_sandbox: false,
         ownership_type: "PURCHASED", store: "app_store", period_type: "active",
         original_purchase_date: "2024-01-01T00:00:00Z",
@@ -143,9 +159,9 @@ function main() {
       };
     }
     
-    // 订阅
+    // 订阅（v2.2: 用静态分析确认的 rc_* 产品 ID）
     if (!sub.subscriptions) sub.subscriptions = {};
-    for (const pid of ["com.trancy.app_monthly", "com.trancy.app_yearly", "com.trancy.app_ai_monthly", "com.trancy.app_ai_yearly"]) {
+    for (const pid of RC_PRODUCTS) {
       if (!sub.subscriptions[pid]) sub.subscriptions[pid] = {};
       sub.subscriptions[pid] = {
         ...sub.subscriptions[pid],
@@ -177,7 +193,7 @@ function main() {
           const v = obj[k]; const lk = k.toLowerCase();
           
           if (typeof v === 'boolean') {
-            if (/^(is)?(pro|premium|vip|member|subscribed|paid|active|entitled|enabled|svip|promember)/.test(lk)) obj[k] = true;
+            if (/^(is)?(pro|premium|vip|member|subscribed|paid|active|entitled|enabled|svip|promember|ai)/.test(lk)) obj[k] = true;
             if (/^(is)?(trial|canceled|expired|limited|sandbox)/.test(lk)) obj[k] = false;
           }
           if (typeof v === 'number') {
