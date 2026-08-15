@@ -1,0 +1,51 @@
+#!name=喜马拉雅会员解锁 (9.5.1)
+#!desc=喜马拉雅 iOS 9.5.1 会员状态解锁 + 播放权限字段 + 音质解锁 + 去广告。基于真实抓包(2026-08-15)。付费音频播放 URL 由服务器签发，不在解锁范围。
+#!author=Minis
+#!system=ios
+#!version=2.0.1
+#!date=2026-08-15
+#!icon=https://imagev2.xmcdn.com/storages/7649-audiofreehighqps/A7/A2/GKwRIF9n5lLgAANs-wDQRjzO.png
+
+[Script]
+# 会员状态：个人页/首页
+^https?:\/\/mobwsa\.ximalaya\.com\/mobile-user\/v2\/homePage url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-个人页
+# 会员状态：VIP 检查
+^https?:\/\/mwsa\.ximalaya\.com\/vip\/check\/user\/ url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-VIP检查
+# 会员状态：VIP 中心
+^https?:\/\/mwsa\.ximalaya\.com\/business-vip-center-mobile-web\/user\/vip-info\/v1\/ url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-VIP中心
+# 会员状态：会员类型全集
+^https?:\/\/.+ximalaya\.com\/business-vip-presale-mobile-web\/user\/basicInfo url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-会员状态
+# 播放权限：baseInfo
+^https?:\/\/.+ximalaya\.com\/mobile-playpage\/track\/v4\/baseInfo url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-播放鉴权
+# 播放权限：专辑曲目列表
+^https?:\/\/.+ximalaya\.com\/mobile\/v1\/album\/track url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-曲目列表
+# 播放权限：播放列表
+^https?:\/\/.+ximalaya\.com\/mobile\/playlist\/album\/new url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-播放列表
+# 功能：音质解锁
+^https?:\/\/.+ximalaya\.com\/mobile-playpage\/playpage\/track\/qualityAndEffect url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-音质
+# 功能：专辑种草页
+^https?:\/\/.+ximalaya\.com\/mobile-album\/album\/plant\/grass url script-response-body https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Ximalaya/xmly_unlock.js, requires-body=true, timeout=10, tag=喜马拉雅-专辑页
+
+# ============ 去广告 ============
+# 好友横幅
+^https?:\/\/passport\.ximalaya\.com\/friendship-mobile\/v1\/findFriendsBanner\/show\/ url reject
+# 上报/采集
+^https?:\/\/xdcs-collector\.ximalaya\.com\/api\/v1\/realtime url reject
+^https?:\/\/xuid-server\.ximalaya\.com\/xuid-server\/v8\/report url reject
+# 广告域名
+^https?:\/\/adse\.wsa\.ximalaya\.com url reject
+^https?:\/\/adse\.ximalaya\.com url reject
+^https?:\/\/adsehera\.ximalaya\.com url reject
+^https?:\/\/ad\.ximalaya\.com url reject
+^https?:\/\/ad-incentive\.ximalaya\.com url reject
+# 统计
+^https?:\/\/ulogs\.umeng\.com\/unify_logs url reject
+# 签到活动（弹窗）
+^https?:\/\/.+ximalaya\.com\/x-web-activity\/signIn\/getHomePageSignInInfo\/ url reject-200
+# 专辑价格弹窗
+^https?:\/\/.+ximalaya\.com\/product\/promotion\/v1\/album\/price url reject-200
+# 底部会员购买弹窗
+^https?:\/\/.+ximalaya\.com\/business-sale-promotion-guide-mobile-web\/popup\/info\/ url reject
+
+[MITM]
+hostname = %APPEND% mobwsa.ximalaya.com, mobile.ximalaya.com, mwsa.ximalaya.com, mp.ximalaya.com, mpaywsa.ximalaya.com, mermaid.ximalaya.com, livewsa.ximalaya.com, passport.ximalaya.com, xuid-server.ximalaya.com, xdcs-collector.ximalaya.com, adse.ximalaya.com, adsehera.ximalaya.com, ad-incentive.ximalaya.com
