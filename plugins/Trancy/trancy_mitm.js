@@ -18,7 +18,7 @@
 // 5. service.trancy.org/1/user/profile              → premium: false → true
 // 6. api.rc-backup.com/v1/subscribers/{id}          → entitlements:{} → 填充pro
 
-const VERSION = "2.2";
+const VERSION = "2.3";
 
 // RC 产品 ID（静态分析确认）
 const RC_PRODUCTS = ["rc_lifetime", "rc_annual", "rc_six_month", "rc_three_month", "rc_two_month", "rc_monthly", "rc_weekly"];
@@ -43,6 +43,19 @@ function main() {
   }
   
   console.log('[Trancy v2.2] Processing: ' + path);
+  
+  // ===== 0. AI 字幕 403 修复（service.trancy.org/1/captions/{id}?source=audio）=====
+  // 原始: {"code":403,"message":"You've reached the daily limit of 5 AI subtitles for free users..."}
+  // 每日 5 条限制 → 假装成功（空字幕会让 app 显示"无字幕"，至少不再弹错误）
+  if (/^\/1\/captions\/[^\/]+\?/.test(path) && /source=audio/.test(url)) {
+    if (body && body.code === 403) {
+      console.log('[Trancy] AI captions daily limit 403 -> ok (empty)');
+      $done({
+        body: JSON.stringify({ data: [], message: "ok" })
+      });
+      return;
+    }
+  }
   
   // ===== 1. /translations (3/4 translations - AI翻译接口) =====
   // 原始: {"code":403,"message":"高级 AI 已过期，请升级"}
