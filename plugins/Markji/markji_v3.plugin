@@ -9,6 +9,8 @@
 [Script]
 http-response ^https:\/\/(www\.markji\.com|maimemostatus\.com)\/api\/v2\/system\/check script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Markji/markji_v3.js, requires-body=true, timeout=10, tag=Markji 专业版解锁
 http-response ^https:\/\/(www\.markji\.com|maimemostatus\.com)\/api\/v1\/users\/profile script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Markji/markji_v3.js, requires-body=true, timeout=10, tag=Markji 用户资料
+http-response ^https:\/\/(www\.markji\.com|maimemostatus\.com)\/api\/v1\/study_data\/records(\/precheck)? script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Markji/markji_v3.js, requires-body=true, timeout=10, tag=Markji 学习扣费
+http-response ^https:\/\/(www\.markji\.com|maimemostatus\.com)\/api\/v1\/system\/precheck script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Markji/markji_v3.js, requires-body=true, timeout=10, tag=Markji 系统预检
 
 [MITM]
 hostname = %APPEND% www.markji.com, maimemostatus.com
