@@ -1,9 +1,9 @@
 #!name=Trancy Premium
-#!desc=解锁 Trancy Premium + AI 会员 v2.3（含 AI 字幕 5条/日限制修复）
+#!desc=解锁 Trancy Premium + AI 会员 v2.3.1（修复 AI 字幕403处理正则 + status接口误伤）
 #!author=Minis
 #!home=https://github.com/Leslie159357/Loon-Plugins
 #!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/5b/6b/4d/5b6b4de6-6f46-6f42-3eac-6b24736b0f23/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-1-0-0-0-0.png/512x512bb.png
-#!version=2.3
+#!version=2.3.1
 #!date=2026-08-15
 
 [Script]
