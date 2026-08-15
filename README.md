@@ -10,7 +10,7 @@
 | [百词斩Pro会员解锁](plugins/BaiCiZhan/baicizhan.plugin) | 百词斩 | 解锁Pro会员 + 铜板改99999 |
 | [Keep会员解锁](plugins/Keep-Prime/keep_vip.plugin) | Keep | 解锁会员功能 |
 | [懒人听书VIP](plugins/LazyListen/lanrentingshu.plugin) | 懒人听书 | 解锁VIP |
-| [喜马拉雅](plugins/Ximalaya/ximalaya.plugin) | 喜马拉雅 | 解锁会员 |
+|  [喜马拉雅](plugins/Ximalaya/XimalayaUnlock.plugin) | 喜马拉雅 | 解锁会员 |
 | [多邻国](plugins/Duolingo/duolingo.plugin) | Duolingo | Super Duolingo |
 | [每日英语听力](plugins/EnglishDaily/english_daily.plugin) | 每日英语听力 | 解锁VIP |
 | [ELSA Speak](plugins/ELSA-Speak/elsa.plugin) | ELSA Speak | 解锁Pro |
