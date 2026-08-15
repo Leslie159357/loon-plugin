@@ -22,7 +22,7 @@
 | [InkerSpeak](plugins/InkerSpeak/inkerspeak.plugin) | InkerSpeak | 解锁 |
 | [YouMind](plugins/YouMind/youmind.plugin) | YouMind | 解锁 |
 | [Polypal 会员解锁](plugins/Polypal/polypal.plugin) | Polypal (Timekettle Live Translator) | 解锁VIP会员 - 无限翻译时长 |
-| [墨墨记忆卡 专业版解锁](plugins/Markji/markji.plugin) | 墨墨记忆卡 | 解锁专业版 |
+| [墨墨记忆卡 专业版解锁 v3](plugins/Markji/markji_v3.plugin) | 墨墨记忆卡 | 解锁专业版（5.9.00+ 适配 maimemostatus.com） |
 | [FocusFlight 订阅破解](plugins/FocusFlight/FocusFlight_RevenueCat.plugin) | FocusFlight | 解锁全部 Pro/Premium/Plus/All-Access 权益 |
 | [EchoLoop](plugins/EchoLoop) | Echo Loop | 解锁 Premium（AI 翻译/词典/解析等全部付费功能） |
 | [TheGreatMe](plugins/TheGreatMe/TheGreatMe_Unlock.loon.plugin) | TheGreatMe | 永久解锁会员（RevenueCat 定制版，premium+pro 双权益） |
