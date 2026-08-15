@@ -1,0 +1,14 @@
+#!name=墨墨记忆卡 专业版解锁 v3
+#!desc=解锁墨墨记忆卡专业版所有功能（5.9.00 适配，API 已迁移 maimemostatus.com）
+#!author=Minis
+#!home=https://github.com/Leslie159357/Loon-Plugins/tree/main/plugins/Markji
+#!icon=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/86/20/1f/86201fdf-27f5-b2b9-14e5-56ad5784fee9/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/512x512bb.png
+#!date=2026-08-15
+#!tag=unlock,学习,记忆,卡片
+
+[Script]
+http-response ^https:\/\/(www\.markji\.com|maimemostatus\.com)\/api\/v2\/system\/check script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Markji/markji_v3.js, requires-body=true, timeout=10, tag=Markji 专业版解锁
+http-response ^https:\/\/(www\.markji\.com|maimemostatus\.com)\/api\/v1\/users\/profile script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Markji/markji_v3.js, requires-body=true, timeout=10, tag=Markji 用户资料
+
+[MITM]
+hostname = %APPEND% www.markji.com, maimemostatus.com
