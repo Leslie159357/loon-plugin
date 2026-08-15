@@ -1,11 +1,8 @@
-// Pollykann 会员解锁 v3.0 (2026-08-15)
-// 抓包确认的判定链:
-//   /account/sign 返回 PlkAccountInfo (含 pollykannVipState/vipType/vipEndTimestamp 等可选字段)
-//   -> 客户端解码 -> 写入 UserDefaults["pollykannVipExpireDate"] (NSDate)
-//   -> vipAvailable 读日期 > now 即会员
-// 免费用户响应里 VIP 字段缺失(nil) -> 脚本必须【新增】字段, 不能只改写已有字段
-// v3 修改: /account/sign 强制注入 vipEndTimestamp=2099 + pollykannVipState=1 + vipType=5
-//          /home 同样强制注入; 其他 JSON 递归改写已有 vip 字段
+// Pollykann 会员解锁 v4.0 (2026-08-15)
+// v3 结论: 注入字段成功但未解锁 -> 嫌疑 = x-plk-api-signature 响应签名校验
+//   (客户端 0x1000cd700 区域: 对响应体计算签名与响应头比较, 不匹配丢弃)
+// v4 修改: /account/sign 注入 VIP 字段 + 删除 x-plk-api-signature 响应头
+//   (若客户端"无签名头=跳过校验"则注入生效; 若崩溃则回滚)
 
 var TARGET_KEYS = {
     'vipendtimestamp': 4070908800,
@@ -52,23 +49,36 @@ function walk(obj) {
     }
 }
 
-// 强制注入 VIP 字段 (针对用户信息类响应, 免费用户缺这些字段)
 function injectVip(obj) {
     if (!obj) return;
     var d = obj.data || obj;
     d.pollykannVipState = 1;
     d.vipType = 5;
     d.vipStartTimestamp = 0;
-    d.vipEndTimestamp = 4070908800;       // 2099-01-01 epoch 秒
+    d.vipEndTimestamp = 4070908800;
     d.vipExpireDate = '2099-12-31 23:59:59';
     d.isVip = 1;
+}
+
+// 删除响应签名头 (尝试绕过校验)
+function stripSigHeaders(headers) {
+    if (!headers) return headers;
+    var out = {};
+    for (var k in headers) {
+        if (!Object.prototype.hasOwnProperty.call(headers, k)) continue;
+        var kl = k.toLowerCase();
+        if (kl === 'x-plk-api-signature' || kl === 'plk-api-signature') {
+            continue;
+        }
+        out[k] = headers[k];
+    }
+    return out;
 }
 
 var url = $request.url;
 
 if ($response && $response.body) {
     var body = $response.body;
-    // AES 加密接口: 透传诊断
     if (url.indexOf('/account/stream') !== -1 || url.indexOf('/appConfig/stream') !== -1) {
         console.log('Pollykann: encrypted stream, len=' + body.length);
         $done({});
@@ -77,14 +87,12 @@ if ($response && $response.body) {
     var obj = null;
     try { obj = JSON.parse(body); } catch (e) { $done({}); return; }
 
-    // 1. /account/sign 用户信息: 强制注入 VIP 字段 (判定数据源!)
     if (url.indexOf('/account/sign') !== -1) {
-        console.log('Pollykann: account/sign injected vip fields');
+        console.log('Pollykann: account/sign injected + sig stripped');
         injectVip(obj);
-        $done({ body: JSON.stringify(obj) });
+        $done({ body: JSON.stringify(obj), headers: stripSigHeaders($response.headers) });
         return;
     }
-    // 2. /home 首页: 注入 VIP 字段
     if (url.indexOf('/home') !== -1) {
         console.log('Pollykann: home injected');
         injectVip(obj);
@@ -92,16 +100,13 @@ if ($response && $response.body) {
         $done({ body: JSON.stringify(obj) });
         return;
     }
-    // 3. LeanCloud users/me: 注入 VIP 字段 (双保险)
     if (url.indexOf('/1.1/users/me') !== -1) {
         console.log('Pollykann: users/me injected');
         injectVip(obj);
         $done({ body: JSON.stringify(obj) });
         return;
     }
-    // 4. /vip/productList 商品列表
     if (url.indexOf('/vip/productList') !== -1) {
-        console.log('Pollykann: productList');
         walk(obj);
         if (obj.data && obj.data.length) {
             for (var i = 0; i < obj.data.length; i++) {
@@ -111,7 +116,6 @@ if ($response && $response.body) {
         $done({ body: JSON.stringify(obj) });
         return;
     }
-    // 5. 其他 JSON: 递归改写已有 vip 字段
     walk(obj);
     var newBody = JSON.stringify(obj);
     if (newBody !== body) {
