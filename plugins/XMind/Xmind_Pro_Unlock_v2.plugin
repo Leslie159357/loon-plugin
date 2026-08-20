@@ -1,0 +1,17 @@
+#!name=Xmind Pro+ 解锁 v2
+#!desc=Xmind iOS Pro Plus 会员解锁插件 v2（基于 v26.05 逆向 + 抓包修正，覆盖 www/app.xmind 域名）
+#!author=Minis
+#!homepage=https://github.com/Leslie159357/loon-plugin
+#!system=ios
+#!icon=https://www.xmind.cn/favicon.ico
+#!version=2.0
+#!date=2026-08-20
+
+[General]
+allow-udp = false
+
+[MITM]
+hostname = %APPEND% app.xmind.com, app.xmind.cn, www.xmind.com, www.xmind.cn, tidewalker.xmind.app, tidewalker.xmind.cn
+
+[Script]
+http-response ^https?:\/\/(app|www|xmind)?\.?xmind\.(com|cn)\/(_res\/(user_sub_details|appstore\/sub|appstore\/products|devices|session)|_api\/appstore\/active|store\/user\/purchases) requires-body=true, script-path=xmind_unlock_v2.js, timeout=10, tag=Xmind-Unlock
