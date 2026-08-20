@@ -1,0 +1,13 @@
+#!name=Xmind Pro+ 解锁 v5
+#!desc=解锁 Xmind ProPlus 会员（v5 诊断版：命中弹通知 + 无条件伪造 appstore/sub + jsDelivr CDN）
+#!author=Minis
+#!home=https://github.com/Leslie159357/loon-plugin
+#!icon=https://www.xmind.cn/favicon.ico
+#!version=5.1
+#!date=2026-08-21
+
+[Script]
+http-response ^https?://www\.xmind\.cn/ script-path=https://cdn.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/XMind/xmind_unlock_v5.js, requires-body=true, timeout=10, tag=XmindAll
+
+[MITM]
+hostname = www.xmind.cn
