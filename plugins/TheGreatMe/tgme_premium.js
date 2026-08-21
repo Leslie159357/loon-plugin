@@ -1,36 +1,7 @@
-// TheGreatMe Premium Unlock — RevenueCat MITM 定制版
-// 逆向依据：thegreatme.forever（永久买断）/ .week / .year 产品
-// entitlement: premium + pro 双写；etag 防 304；幂等直通
-// 适用于 Loon / Quantumult X / Surge（$request/$response/$done 通用）
-// 部署：脚本放 /Scripts/，配合对应平台配置文件
-
-// ========== 端点分类 ==========
-function isSubscribers(url) {
-  return /\/v1\/subscribers\//.test(url);
-}
-function isReceipts(url) {
-  return /\/v1\/receipts/.test(url);
-}
-function isMapping(url) {
-  return /product_entitlement_mapping/.test(url);
-}
-function isOfferings(url) {
-  return /\/offerings/.test(url);
-}
-
-// ========== 幂等：已含未过期 entitlement → 直通 ==========
-function alreadyActive(body) {
-  try {
-    const d = JSON.parse(body);
-    const subs = d.subscriber || {};
-    const ent = subs.entitlements || {};
-    for (const k in ent) {
-      const e = ent[k];
-      if (e && e.expires_date && new Date(e.expires_date).getTime() > Date.now()) return true;
-    }
-  } catch (e) {}
-  return false;
-}
+// TheGreatMe Premium Unlock — http-request 直接伪造版 v3
+// 策略：subscribers/receipts 请求 → 直接本地返回伪造的 200 CustomerInfo
+//       不等服务器响应 → 彻底绕开 304/etag/签名路径
+// 适用于 Loon（http-request 模式）
 
 function makeEntitlement() {
   return {
@@ -70,85 +41,54 @@ function makeSubProduct() {
   };
 }
 
-function patchSubscribers(body) {
-  const d = JSON.parse(body);
-  const subs = d.subscriber || (d.subscriber = {});
-  const ent = subs.entitlements || (subs.entitlements = {});
-  const fake = makeEntitlement();
-  ent["premium"] = fake;
-  ent["pro"] = fake;
-  if (!subs.non_subscriptions) subs.non_subscriptions = {};
-  subs.non_subscriptions["thegreatme.forever"] = makeNonSub();
-  if (!subs.other_purchases) subs.other_purchases = {};
-  subs.other_purchases["thegreatme.forever"] = makeNonSub();
-  if (!subs.subscriptions) subs.subscriptions = {};
-  subs.subscriptions["thegreatme.forever"] = makeSubProduct();
-  subs.subscriptions["thegreatme.year"] = makeSubProduct();
-  subs.subscriptions["thegreatme.week"] = makeSubProduct();
-  subs.original_purchase_date = "2024-09-09T09:09:09Z";
-  subs.first_seen = "2024-09-09T09:09:09Z";
-  d.request_date = new Date().toISOString();
-  d.request_date_ms = Date.now();
-  return JSON.stringify(d);
-}
-
-function patchMapping() {
-  const map = {
-    "product_entitlement_mapping": {}
+function makeFakeCustomerInfo() {
+  const ent = {};
+  ent["premium"] = makeEntitlement();
+  ent["pro"] = makeEntitlement();
+  return {
+    "request_date": new Date().toISOString(),
+    "request_date_ms": Date.now(),
+    "subscriber": {
+      "entitlements": ent,
+      "non_subscriptions": {
+        "thegreatme.forever": makeNonSub()
+      },
+      "other_purchases": {
+        "thegreatme.forever": makeNonSub()
+      },
+      "subscriptions": {
+        "thegreatme.forever": makeSubProduct(),
+        "thegreatme.year": makeSubProduct(),
+        "thegreatme.week": makeSubProduct()
+      },
+      "original_purchase_date": "2024-09-09T09:09:09Z",
+      "first_seen": "2024-09-09T09:09:09Z",
+      "original_application_version": "1"
+    }
   };
-  for (const pid of ["thegreatme.forever", "thegreatme.year", "thegreatme.week"]) {
-    map.product_entitlement_mapping[pid] = {
-      "entitlement": "premium",
-      "entitlements": ["premium", "pro"]
-    };
-  }
-  return JSON.stringify(map);
 }
 
-function patchOfferings(body) {
-  try {
-    const d = JSON.parse(body);
-    d.request_date = new Date().toISOString();
-    d.request_date_ms = Date.now();
-    return JSON.stringify(d);
-  } catch (e) {
-    return body;
-  }
-}
-
-// ========== 主入口 ==========
+// 主入口：http-request 直接应答
 try {
   const url = $request.url || "";
   const method = $request.method || "GET";
 
-  // request 阶段：删 etag 防 304（无 body 无法改写）
-  if (typeof $request.headers !== "undefined" && !$response) {
-    if ($request.headers["x-revenuecat-etag"]) {
-      delete $request.headers["x-revenuecat-etag"];
+  // 仅处理 subscribers 与 receipts 端点，直接伪造 200
+  if (/\/v1\/subscribers\/[^\/]+(\?|$)/.test(url) || /\/v1\/receipts/.test(url)) {
+    // 注意：/offerings 结尾的不伪造（那是商品列表，SDK 从 subscribers 端点读 entitlement）
+    if (/\/(offerings|attributes|intro_eligibility)\/?$/.test(url)) {
+      $done({});
+      return;
     }
-    $done({ headers: $request.headers });
+    $done({
+      status: 200,
+      headers: { "Content-Type": "application/json", "content-type": "application/json" },
+      body: JSON.stringify(makeFakeCustomerInfo())
+    });
     return;
   }
 
-  // response 阶段
-  if (isMapping(url)) {
-    $done({ body: patchMapping() });
-    return;
-  }
-  if (isSubscribers(url)) {
-    if (alreadyActive($response.body)) { $done({}); return; }
-    $done({ body: patchSubscribers($response.body) });
-    return;
-  }
-  if (isReceipts(url)) {
-    if (alreadyActive($response.body)) { $done({}); return; }
-    $done({ body: patchSubscribers($response.body) });
-    return;
-  }
-  if (isOfferings(url)) {
-    $done({ body: patchOfferings($response.body) });
-    return;
-  }
+  // 其他端点放行
   $done({});
 } catch (e) {
   $done({});

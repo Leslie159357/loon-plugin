@@ -2,7 +2,7 @@
 #!desc=TheGreatMe 会员解锁（RevenueCat MITM 定制版）— 永久解锁 premium
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/loon-plugin
-#!version=2.1.0
+#!version=3.0.0
 #!date=2026-08-21
 #!tag=premium,unlock,thegreatme,revenuecat
 
@@ -11,5 +11,4 @@ hostname = api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, a
 skip_validation = true
 
 [Script]
-http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts|product_entitlement_mapping|offerings) requires-body = true, script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/TheGreatMe/tgme_premium.js, timeout=10, tag=TheGreatMe_RC
-http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/TheGreatMe/tgme_premium.js, timeout=10, tag=TheGreatMe_Etag
+http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/TheGreatMe/tgme_premium.js, timeout=10, tag=TheGreatMe_RC
