@@ -1,0 +1,18 @@
+#!name=多邻国 v11（Super+Max加固）
+#!desc=日历1000天🔥 + 连胜1000天 + 安全盾2099 + 全成就 + Super + Max视频通话入口修正
+#!author=Minis
+#!tag=教育,多邻国
+#!date=2026-08-21
+#!version=11.0
+
+[Script]
+http-request ^https?:\/\/ios-api-2\.duolingo\.cn\/2023-05-23\/batch script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Duolingo/duolingo_gems_v11.js, requires-body=true, timeout=10, tag=多邻国 请求拦截
+
+http-response ^https?:\/\/ios-api-2\.duolingo\.cn script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Duolingo/duolingo_gems_v11.js, requires-body=true, timeout=10, max-size=600000, tag=多邻国 响应拦截
+
+http-response ^https?:\/\/duolingo-achievements-prod\.duolingo\.cn script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Duolingo/duolingo_gems_v11.js, requires-body=true, timeout=10, max-size=200000, tag=多邻国 成就修改
+
+http-response ^https?:\/\/api2\.duolingo\.cn script-path=https://raw.githubusercontent.com/Leslie159357/Loon-Plugins/main/plugins/Duolingo/duolingo_gems_v11.js, requires-body=true, timeout=10, max-size=600000, tag=多邻国 api2 响应拦截
+
+[Mitm]
+hostname = ios-api-2.duolingo.cn, duolingo-achievements-prod.duolingo.cn, api2.duolingo.cn
