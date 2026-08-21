@@ -1,0 +1,14 @@
+#!name=Xmind Pro+ 解锁 v6
+#!desc=Xmind ProPlus 会员解锁（本地脚本版：脚本放 Scripts/xmind_unlock_v5.js 即可，命中弹通知）
+#!author=Minis
+#!home=https://github.com/Leslie159357/loon-plugin
+#!icon=https://www.xmind.cn/favicon.ico
+#!version=6.0
+#!date=2026-08-21
+
+[MITM]
+hostname = www.xmind.cn
+skip_validation = true
+
+[Script]
+http-response ^https?://www\.xmind\.cn/ script-path = xmind_unlock_v5.js, requires-body = true, timeout=10, tag=XmindUnlock
