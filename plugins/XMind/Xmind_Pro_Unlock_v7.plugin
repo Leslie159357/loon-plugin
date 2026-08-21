@@ -1,0 +1,14 @@
+#!name=Xmind v7 诊断插件
+#!desc=Xmind 会员解锁（v7 终极诊断版：任何 www.xmind.cn 请求都弹通知，用于确认 Loon 是否执行脚本）
+#!author=Minis
+#!home=https://github.com/Leslie159357/loon-plugin
+#!icon=https://www.xmind.cn/favicon.ico
+#!version=7.0
+#!date=2026-08-21
+
+[MITM]
+hostname = www.xmind.cn
+
+[Script]
+http-request ^https?://www\.xmind\.cn/ script-path = https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/XMind/xmind_unlock_v7.js, timeout=10, tag=XmindReq
+http-response ^https?://www\.xmind\.cn/ script-path = https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/XMind/xmind_unlock_v7.js, requires-body = true, timeout=10, tag=XmindResp
