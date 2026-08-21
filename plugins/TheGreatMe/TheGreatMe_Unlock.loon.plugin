@@ -11,4 +11,4 @@ hostname = api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, a
 skip_validation = true
 
 [Script]
-http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/TheGreatMe/tgme_premium.js, timeout=10, tag=TheGreatMe_RC
+http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path = tgme_premium.js, timeout=10, tag=TheGreatMe_RC
