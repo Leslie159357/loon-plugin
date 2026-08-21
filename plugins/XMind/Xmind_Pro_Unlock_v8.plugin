@@ -1,0 +1,23 @@
+#!name=Xmind Pro+ 解锁 (Rewrite版)
+#!desc=Xmind iOS Pro Plus 会员解锁 v8（纯 Rewrite + jq 改响应，无需 JS 脚本）
+#!author=Minis
+#!home=https://github.com/Leslie159357/loon-plugin
+#!icon=https://www.xmind.cn/favicon.ico
+#!version=8.0
+#!date=2026-08-21
+
+[MITM]
+hostname = www.xmind.cn
+
+[Rewrite]
+# user_sub_details：向空数组注入活跃 Pro 订阅
+^https?://www\.xmind\.cn/_res/user_sub_details response-body-json-jq '.appstore += [{"plan":"proplus","isActive":true,"expireDate":4092599349,"productId":"net.xmind.brownieapp.proplus.yearly","status":"active","sign":"PROPLUS_UNLOCKED"}] | .google += [{"plan":"proplus","isActive":true,"expireDate":4092599349,"productId":"net.xmind.brownieapp.proplus.yearly","status":"active"}] | .official_website += [{"plan":"proplus","isActive":true,"expireDate":4092599349,"type":"proplus"}]'
+
+# appstore/active：状态字段改 Pro（保留 deviceId 等原字段）
+^https?://www\.xmind\.cn/_api/appstore/active response-body-json-jq '.status = "proplus" | .subscriptionStatus = "ACTIVE" | .expireTime = 4092599349 | .bindXmind = 1'
+
+# devices：license 改 Pro（保留 raw_data 原字段）
+^https?://www\.xmind\.cn/_res/devices response-body-json-jq '.license.status = "proplus" | .license.expireTime = 4092599349'
+
+# appstore/sub：POST 响应改成功体（原返回 4003）
+^https?://www\.xmind\.cn/_res/appstore/sub mock-response-body data-type=json data={"_code":200,"plan":"proplus","isActive":true,"expireDate":4092599349,"status":"active","productId":"net.xmind.brownieapp.proplus.yearly","sign":"PROPLUS_UNLOCKED"}, status-code=200
