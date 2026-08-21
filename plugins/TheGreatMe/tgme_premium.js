@@ -1,7 +1,11 @@
-// TheGreatMe Premium Unlock — http-request 直接伪造版 v3
-// 策略：subscribers/receipts 请求 → 直接本地返回伪造的 200 CustomerInfo
-//       不等服务器响应 → 彻底绕开 304/etag/签名路径
-// 适用于 Loon（http-request 模式）
+// TheGreatMe Premium Unlock — 双模式 v4
+// http-request 模式：subscribers/receipts 请求 → 直接本地返回伪造 200 CustomerInfo（绕开 304/etag）
+// http-response 模式：如果请求未被 request 拦截（如 200 正常返回）→ 兜底改写 body
+// 通过 $response 是否存在区分模式，同一脚本双规则复用
+//
+// 部署（固定 commit URL，无缓存问题）：
+// http-request  ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=<REMOTE JS>
+// http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=<REMOTE JS> requires-body=true
 
 function makeEntitlement() {
   return {
@@ -42,20 +46,17 @@ function makeSubProduct() {
 }
 
 function makeFakeCustomerInfo() {
-  const ent = {};
-  ent["premium"] = makeEntitlement();
-  ent["pro"] = makeEntitlement();
+  const ent = {
+    "premium": makeEntitlement(),
+    "pro": makeEntitlement()
+  };
   return {
     "request_date": new Date().toISOString(),
     "request_date_ms": Date.now(),
     "subscriber": {
       "entitlements": ent,
-      "non_subscriptions": {
-        "thegreatme.forever": makeNonSub()
-      },
-      "other_purchases": {
-        "thegreatme.forever": makeNonSub()
-      },
+      "non_subscriptions": { "thegreatme.forever": makeNonSub() },
+      "other_purchases": { "thegreatme.forever": makeNonSub() },
       "subscriptions": {
         "thegreatme.forever": makeSubProduct(),
         "thegreatme.year": makeSubProduct(),
@@ -68,28 +69,43 @@ function makeFakeCustomerInfo() {
   };
 }
 
-// 主入口：http-request 直接应答
+// 判断是否为需要解锁的请求（subscribers 或 receipts，排除 offerings/attributes 等子端点）
+function shouldUnlock(url) {
+  if (!url) return false;
+  // offerings 是商品列表，SDK 不从这里读 entitlement，放行
+  if (/\/(offerings|attributes|intro_eligibility|adservices_attribution)\/?($|\?)/.test(url)) return false;
+  return /\/v1\/subscribers\/.+/i.test(url) || /\/v1\/receipts/i.test(url);
+}
+
 try {
   const url = $request.url || "";
   const method = $request.method || "GET";
+  if (method !== "GET" && method !== "POST") { $done({}); return; }
+  if (!shouldUnlock(url)) { $done({}); return; }
 
-  // 仅处理 subscribers 与 receipts 端点，直接伪造 200
-  if (/\/v1\/subscribers\/[^\/]+(\?|$)/.test(url) || /\/v1\/receipts/.test(url)) {
-    // 注意：/offerings 结尾的不伪造（那是商品列表，SDK 从 subscribers 端点读 entitlement）
-    if (/\/(offerings|attributes|intro_eligibility)\/?$/.test(url)) {
-      $done({});
-      return;
-    }
+  // ===== http-request 模式：直接应答（$response 未定义）=====
+  if (typeof $response === "undefined" || $response === null || !$response) {
     $done({
       status: 200,
-      headers: { "Content-Type": "application/json", "content-type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify(makeFakeCustomerInfo())
     });
     return;
   }
 
-  // 其他端点放行
-  $done({});
+  // ===== http-response 模式：改写 body（$response 有定义，兜底）=====
+  const resp = $response;
+  // 仅处理有 body 的 200
+  if (!resp.body) { $done({}); return; }
+  $done({
+    status: 200,
+    headers: Object.assign({}, resp.headers, { "Content-Type": "application/json" }),
+    body: JSON.stringify(makeFakeCustomerInfo())
+  });
 } catch (e) {
   $done({});
 }
