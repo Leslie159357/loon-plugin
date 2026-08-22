@@ -1,0 +1,24 @@
+#!name = 115 网盘直连
+#!desc = 115 全系域名直连（拾光Next 公告域名 + blackmatrix7 补充），避免 115 挂梯后播放/下载失败
+#!author = ox-alpha
+#!homepage = https://github.com/blackmatrix7/ios_rule_script
+#!icon = https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/icon/mini/115.png
+#!tag = 直连,网盘
+
+[Rule]
+# —— 拾光Next 公告要求直连的域名 ——
+DOMAIN-SUFFIX,115.com,DIRECT
+DOMAIN-SUFFIX,115.cn,DIRECT
+DOMAIN-SUFFIX,115.net,DIRECT
+DOMAIN-SUFFIX,115cdn.com,DIRECT
+DOMAIN-SUFFIX,115dot.com,DIRECT
+DOMAIN-SUFFIX,anxia.com,DIRECT
+
+# —— blackmatrix7 规则补充（下载/CDN 常用）——
+DOMAIN,fhnfile.oss-cn-shenzhen.aliyuncs.com,DIRECT
+DOMAIN-SUFFIX,115cdn.net,DIRECT
+DOMAIN-SUFFIX,115img.com,DIRECT
+DOMAIN-SUFFIX,116cd.cn,DIRECT
+DOMAIN-SUFFIX,116cd.com,DIRECT
+DOMAIN-SUFFIX,116cd.net,DIRECT
+DOMAIN-SUFFIX,sq.cc,DIRECT

@@ -1,0 +1,17 @@
+# NAME: 115 网盘直连（Quantumult X）
+# DESC: 拾光Next 公告域名 + blackmatrix7 补充，全部 DIRECT
+# 用法: Quantumult X → 分流 → [filter_local] 粘贴，
+#       或保存为 .list 后在 [filter_remote] 引用（放在代理规则之前）
+HOST-SUFFIX,115.com,DIRECT
+HOST-SUFFIX,115.cn,DIRECT
+HOST-SUFFIX,115.net,DIRECT
+HOST-SUFFIX,115cdn.com,DIRECT
+HOST-SUFFIX,115dot.com,DIRECT
+HOST-SUFFIX,anxia.com,DIRECT
+HOST,fhnfile.oss-cn-shenzhen.aliyuncs.com,DIRECT
+HOST-SUFFIX,115cdn.net,DIRECT
+HOST-SUFFIX,115img.com,DIRECT
+HOST-SUFFIX,116cd.cn,DIRECT
+HOST-SUFFIX,116cd.com,DIRECT
+HOST-SUFFIX,116cd.net,DIRECT
+HOST-SUFFIX,sq.cc,DIRECT
