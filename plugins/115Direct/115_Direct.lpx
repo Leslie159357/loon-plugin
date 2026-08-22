@@ -14,6 +14,9 @@ DOMAIN-SUFFIX,115cdn.com,DIRECT
 DOMAIN-SUFFIX,115dot.com,DIRECT
 DOMAIN-SUFFIX,anxia.com,DIRECT
 
+# —— Emby 线路直连（拾光Next，阿里云HK 8.210.238.25；若直连慢可删除以下两行）——
+DOMAIN-SUFFIX,stluma.com,DIRECT
+
 # —— blackmatrix7 规则补充（下载/CDN 常用）——
 DOMAIN,fhnfile.oss-cn-shenzhen.aliyuncs.com,DIRECT
 DOMAIN-SUFFIX,115cdn.net,DIRECT
