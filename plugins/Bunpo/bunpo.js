@@ -1,111 +1,108 @@
-// Bunpo Pro & Platinum Unlock — 100% 对齐 TheGreatMe 实战成功架构
-// App: Bunpo (com.N2BunpouApp.yuki)
+// Bunpo Ultimate Unlocker (基于 GitHub 社区 2026 最新工业级成熟方案)
+// 适配 Loon / Quantumult X
+// 原理：
+// 1. Loon 原生 [Rewrite] header-del 抹除 X-RevenueCat-ETag，强破 304 缓存
+// 2. 本地自动全量注入 RevenueCat 所有 entitlements（pro, platinum, plus, all_access 等）
+// 3. 同时递归解密 Bunpo 后端所有课程 JSON（/v3/content/course 与 /v3/content/lesson），locked: true -> false
+
+function unlockJson(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) unlockJson(obj[i]);
+    return obj;
+  }
+  for (const k of Object.keys(obj)) {
+    const v = obj[k];
+    if (k === 'locked' && v === true) {
+      obj[k] = false;
+    } else if (k === 'unlocked' && v === false) {
+      obj[k] = true;
+    } else if (v && typeof v === 'object') {
+      unlockJson(v);
+    }
+  }
+  return obj;
+}
 
 function makeEntitlement(productId) {
   return {
+    "purchase_date": "2024-01-01T01:01:01Z",
+    "original_purchase_date": "2024-01-01T01:01:01Z",
     "expires_date": "2099-12-31T23:59:59Z",
-    "grace_period_expires_date": null,
-    "product_identifier": productId,
-    "purchase_date": "2024-09-09T09:09:09Z",
-    "purchase_date_ms": 1725872949000,
+    "is_sandbox": false,
+    "ownership_type": "PURCHASED",
     "store": "app_store",
-    "unsubscribe_detected_at": null,
-    "billing_issues_detected_at": null,
-    "ownership_type": "PURCHASED"
+    "product_identifier": productId
   };
 }
 
-function makeNonSub(productId) {
-  return [{
-    "id": "bunpo.lifetime_mitm",
-    "purchase_date": "2024-09-09T09:09:09Z",
-    "original_purchase_date": "2024-09-09T09:09:09Z",
-    "store": "app_store",
-    "store_transaction_id": "490001314520000",
-    "is_sandbox": false,
-    "ownership_type": "PURCHASED"
-  }];
-}
-
-function makeSubProduct(productId) {
+function makeSub(productId) {
   return {
     "expires_date": "2099-12-31T23:59:59Z",
-    "original_purchase_date": "2024-09-09T09:09:09Z",
-    "purchase_date": "2024-09-09T09:09:09Z",
-    "store": "app_store",
+    "original_purchase_date": "2024-01-01T01:01:01Z",
+    "purchase_date": "2024-01-01T01:01:01Z",
     "is_sandbox": false,
     "ownership_type": "PURCHASED",
+    "store": "app_store",
     "period_type": "normal"
   };
 }
 
-function makeFakeCustomerInfo() {
-  const proId = "com.N2BunpouApp.yuki.product.lifetimeTime";
-  const platId = "com.N2BunpouApp.yuki.product.platinum.yearly";
-  const ent = {
-    "pro": makeEntitlement(proId),
-    "platinum": makeEntitlement(platId),
-    "plus": makeEntitlement(proId),
-    "premium": makeEntitlement(platId),
-    "all_access": makeEntitlement(proId)
-  };
-  return {
-    "request_date": new Date().toISOString(),
-    "request_date_ms": Date.now(),
-    "subscriber": {
-      "entitlements": ent,
-      "non_subscriptions": {
-        [proId]: makeNonSub(proId)
-      },
-      "other_purchases": {
-        [proId]: makeNonSub(proId)
-      },
-      "subscriptions": {
-        [platId]: makeSubProduct(platId),
-        [proId]: makeSubProduct(proId)
-      },
-      "original_purchase_date": "2024-09-09T09:09:09Z",
-      "first_seen": "2024-09-09T09:09:09Z",
-      "original_application_version": "48",
-      "management_url": "https://apps.apple.com/account/subscriptions"
-    }
-  };
-}
+if (typeof  !== 'undefined' &&  && .body) {
+  const url = ( && .url) || '';
+  try {
+    let data = JSON.parse(.body);
 
-function shouldUnlock(url) {
-  if (!url) return false;
-  if (/\/(offerings|attributes|intro_eligibility|adservices_attribution)\/?($|\?)/.test(url)) return false;
-  return /\/v1\/subscribers\/.+/i.test(url) || /\/v1\/receipts/i.test(url);
-}
+    // 1. RevenueCat 用户信息拦截注入
+    if (/revenuecat|rc-backup/i.test(url)) {
+      if (/\/(offerings|attributes|intro_eligibility)\/?($|\?)/.test(url)) {
+        ({});
+        return;
+      }
+      if (!data.subscriber) data.subscriber = {};
+      const proId = "com.N2BunpouApp.yuki.product.lifetimeTime";
+      const platId = "com.N2BunpouApp.yuki.product.platinum.yearly";
 
-try {
-  const url = ( && .url) || "";
-  const method = ( && .method) || "GET";
-  if (method !== "GET" && method !== "POST") { ({}); }
-  else if (!shouldUnlock(url)) { ({}); }
-  else if (typeof  === "undefined" ||  === null || !) {
-    // http-request 模式：直接应答 200，绝不走 304
-    ({
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      },
-      body: JSON.stringify(makeFakeCustomerInfo())
-    });
-  } else {
-    // http-response 模式：兜底改写
-    const resp = ;
-    if (!resp.body) { ({}); }
-    else {
-      ({
-        status: 200,
-        headers: Object.assign({}, resp.headers, { "Content-Type": "application/json" }),
-        body: JSON.stringify(makeFakeCustomerInfo())
-      });
+      data.subscriber.entitlements = {
+        "pro": makeEntitlement(proId),
+        "platinum": makeEntitlement(platId),
+        "plus": makeEntitlement(proId),
+        "premium": makeEntitlement(platId),
+        "all_access": makeEntitlement(proId)
+      };
+
+      data.subscriber.subscriptions = {
+        [platId]: makeSub(platId),
+        [proId]: makeSub(proId)
+      };
+
+      data.subscriber.non_subscriptions = {
+        [proId]: [{
+          "id": "bunpo_pro_lifetime",
+          "purchase_date": "2024-01-01T01:01:01Z",
+          "original_purchase_date": "2024-01-01T01:01:01Z",
+          "store": "app_store",
+          "ownership_type": "PURCHASED"
+        }]
+      };
+      data.subscriber.other_purchases = data.subscriber.non_subscriptions;
+      console.log('[Bunpo] RevenueCat 200 Body Injected Successfully');
+      ({ body: JSON.stringify(data) });
+      return;
     }
+
+    // 2. Bunpo 后端所有课程与关卡解密（/content/course, /content/lesson 等）
+    if (/run\.app|bunpo/i.test(url)) {
+      data = unlockJson(data);
+      console.log('[Bunpo] Backend JSON Unlocked (locked -> false)');
+      ({ body: JSON.stringify(data) });
+      return;
+    }
+
+    ({});
+  } catch (e) {
+    ({});
   }
-} catch (e) {
+} else {
   ({});
 }
