@@ -1,27 +1,9 @@
-// Bunpo Ultimate Unlocker (基于 GitHub 社区 2026 最新工业级成熟方案)
-// 适配 Loon / Quantumult X
-// 原理：
-// 1. Loon 原生 [Rewrite] header-del 抹除 X-RevenueCat-ETag，强破 304 缓存
-// 2. 本地自动全量注入 RevenueCat 所有 entitlements（pro, platinum, plus, all_access 等）
-// 3. 同时递归解密 Bunpo 后端所有课程 JSON（/v3/content/course 与 /v3/content/lesson），locked: true -> false
+// Bunpo 100% 对齐 Cake 极简无状态树状解密架构
+// 只要是 JSON，无论层级多深，直接将 locked: true -> false, unlocked: false -> true
+// 如果是 RevenueCat 订阅响应，注入 pro & platinum 终身权限
 
-function unlockJson(obj) {
-  if (!obj || typeof obj !== 'object') return obj;
-  if (Array.isArray(obj)) {
-    for (let i = 0; i < obj.length; i++) unlockJson(obj[i]);
-    return obj;
-  }
-  for (const k of Object.keys(obj)) {
-    const v = obj[k];
-    if (k === 'locked' && v === true) {
-      obj[k] = false;
-    } else if (k === 'unlocked' && v === false) {
-      obj[k] = true;
-    } else if (v && typeof v === 'object') {
-      unlockJson(v);
-    }
-  }
-  return obj;
+function log(msg) {
+  console.log('[Bunpo] ' + msg);
 }
 
 function makeEntitlement(productId) {
@@ -36,47 +18,41 @@ function makeEntitlement(productId) {
   };
 }
 
-function makeSub(productId) {
-  return {
-    "expires_date": "2099-12-31T23:59:59Z",
-    "original_purchase_date": "2024-01-01T01:01:01Z",
-    "purchase_date": "2024-01-01T01:01:01Z",
-    "is_sandbox": false,
-    "ownership_type": "PURCHASED",
-    "store": "app_store",
-    "period_type": "normal"
-  };
-}
+function fakeBody(body, url) {
+  if (!body) return body;
+  const trimmed = body.trimStart();
+  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) return body;
 
-if (typeof  !== 'undefined' &&  && .body) {
-  const url = ( && .url) || '';
   try {
-    let data = JSON.parse(.body);
+    let obj = JSON.parse(trimmed);
+    let changed = false;
 
-    // 1. RevenueCat 用户信息拦截注入
+    // 1. RevenueCat 用户信息注入
     if (/revenuecat|rc-backup/i.test(url)) {
       if (/\/(offerings|attributes|intro_eligibility)\/?($|\?)/.test(url)) {
-        ({});
-        return;
+        return body;
       }
-      if (!data.subscriber) data.subscriber = {};
+      if (!obj.subscriber) obj.subscriber = {};
       const proId = "com.N2BunpouApp.yuki.product.lifetimeTime";
       const platId = "com.N2BunpouApp.yuki.product.platinum.yearly";
-
-      data.subscriber.entitlements = {
+      obj.subscriber.entitlements = {
         "pro": makeEntitlement(proId),
         "platinum": makeEntitlement(platId),
         "plus": makeEntitlement(proId),
         "premium": makeEntitlement(platId),
         "all_access": makeEntitlement(proId)
       };
-
-      data.subscriber.subscriptions = {
-        [platId]: makeSub(platId),
-        [proId]: makeSub(proId)
+      obj.subscriber.subscriptions = {
+        [platId]: {
+          "expires_date": "2099-12-31T23:59:59Z",
+          "original_purchase_date": "2024-01-01T01:01:01Z",
+          "purchase_date": "2024-01-01T01:01:01Z",
+          "store": "app_store",
+          "ownership_type": "PURCHASED",
+          "period_type": "normal"
+        }
       };
-
-      data.subscriber.non_subscriptions = {
+      obj.subscriber.non_subscriptions = {
         [proId]: [{
           "id": "bunpo_pro_lifetime",
           "purchase_date": "2024-01-01T01:01:01Z",
@@ -85,22 +61,62 @@ if (typeof  !== 'undefined' &&  && .body) {
           "ownership_type": "PURCHASED"
         }]
       };
-      data.subscriber.other_purchases = data.subscriber.non_subscriptions;
-      console.log('[Bunpo] RevenueCat 200 Body Injected Successfully');
-      ({ body: JSON.stringify(data) });
-      return;
+      obj.subscriber.other_purchases = obj.subscriber.non_subscriptions;
+      log('RevenueCat Subscriber Injected successfully');
+      return JSON.stringify(obj);
     }
 
-    // 2. Bunpo 后端所有课程与关卡解密（/content/course, /content/lesson 等）
-    if (/run\.app|bunpo/i.test(url)) {
-      data = unlockJson(data);
-      console.log('[Bunpo] Backend JSON Unlocked (locked -> false)');
-      ({ body: JSON.stringify(data) });
-      return;
+    // 2. 深度遍历改写 locked 字段 (Cake 同款)
+    function walk(o, path) {
+      if (!o || typeof o !== 'object') return;
+      if (Array.isArray(o)) {
+        o.forEach((v, i) => walk(v, path + '[' + i + ']'));
+        return;
+      }
+      for (const k of Object.keys(o)) {
+        const v = o[k];
+        const p = path + '.' + k;
+        if (v && typeof v === 'object') {
+          walk(v, p);
+          continue;
+        }
+        if (k === 'locked' && typeof v === 'boolean' && v === true) {
+          o[k] = false;
+          changed = true;
+          log('UNLOCK ' + p + ' -> false');
+        } else if (k === 'unlocked' && typeof v === 'boolean' && v === false) {
+          o[k] = true;
+          changed = true;
+          log('UNLOCK ' + p + ' -> true');
+        }
+      }
     }
 
-    ({});
+    walk(obj, '$');
+
+    if (changed) {
+      const nb = JSON.stringify(obj);
+      log('FAKED ' + url.slice(0, 100));
+      return nb;
+    }
+    return body;
   } catch (e) {
+    log('parse fail ' + url.slice(0, 80) + ': ' + e.message);
+    return body;
+  }
+}
+
+if (typeof  !== 'undefined' && ) {
+  const url = ( && .url) || '';
+  const body = .body || '';
+  if (body) {
+    const nb = fakeBody(body, url);
+    if (nb !== body) {
+      ({ body: nb, headers: .headers });
+    } else {
+      ({});
+    }
+  } else {
     ({});
   }
 } else {
