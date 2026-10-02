@@ -1,15 +1,18 @@
 #!name=Bunpo Plus/Platinum 解锁
-#!desc=Bunpo 会员解锁（RevenueCat 定制版）— 永久解锁 Plus & Platinum 全语言全课程
+#!desc=Bunpo 德语/日语等全语言全课程解锁（仿 Cake/TheGreatMe 架构）
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/loon-plugin
-#!version=6.0.0
+#!icon=https://assets.bunpo.app/image/language/round/de.png
+#!version=7.0.0
 #!date=2026-10-03
 #!tag=premium,unlock,bunpo,revenuecat
 
 [MITM]
-hostname = api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, api-diagnostics.revenuecat.com
-skip_validation = true
+hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, api-diagnostics.revenuecat.com
 
 [Script]
-http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@ba1e54fd4d5567e47368b0bc1963dca8dfff3b3c/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Req
-http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) requires-body = true, script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@ba1e54fd4d5567e47368b0bc1963dca8dfff3b3c/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Resp
+# 请求阶段：直接本地返回伪造的 200 会员数据（截断 304 缓存）
+http-request ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@ba1e54fd4d5567e47368b0bc1963dca8dfff3b3c/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_Req
+
+# 响应阶段：兜底改写
+http-response ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@ba1e54fd4d5567e47368b0bc1963dca8dfff3b3c/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_Resp
