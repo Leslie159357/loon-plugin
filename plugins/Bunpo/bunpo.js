@@ -1,20 +1,17 @@
-/*
- * Bunpo Unlock - Plus & Platinum v2.0
- * App: Bunpo (com.N2BunpouApp.yuki)
- * Author: Leslie159357
- */
+// Bunpo Plus & Platinum Unlock v3.0
+// Author: Leslie159357
 
 const url = .url;
 
-// 如果是 offerings 列表请求，直接放行，不影响商店展示
-if (/\/v1\/subscribers\/[^\/]+\/offerings/.test(url)) {
+// 如果是 offerings 请求，直接放行
+if (url.includes('/offerings')) {
   ({});
 } else {
   const expireDate = "2099-12-31T23:59:59Z";
   const plusProduct = "com.N2BunpouApp.yuki.product.lifetimeTime";
   const platinumProduct = "com.N2BunpouApp.yuki.product.platinum.yearly";
 
-  const fakeResponseBody = JSON.stringify({
+  const fakeData = {
     "request_date": "2099-12-31T23:59:59Z",
     "request_date_ms": 4102444799000,
     "subscriber": {
@@ -54,7 +51,7 @@ if (/\/v1\/subscribers\/[^\/]+\/offerings/.test(url)) {
       "last_seen": "2026-10-02T19:20:00Z",
       "management_url": "https://apps.apple.com/account/subscriptions",
       "non_subscriptions": {
-        [plusProduct]: [
+        "com.N2BunpouApp.yuki.product.lifetimeTime": [
           {
             "id": "bunpo_lifetime_pass",
             "is_sandbox": false,
@@ -69,7 +66,7 @@ if (/\/v1\/subscribers\/[^\/]+\/offerings/.test(url)) {
       "original_purchase_date": "2024-01-01T00:00:00Z",
       "other_purchases": {},
       "subscriptions": {
-        [platinumProduct]: {
+        "com.N2BunpouApp.yuki.product.platinum.yearly": {
           "billing_issues_detected_at": null,
           "expires_date": expireDate,
           "grace_period_expires_date": null,
@@ -81,7 +78,7 @@ if (/\/v1\/subscribers\/[^\/]+\/offerings/.test(url)) {
           "store": "app_store",
           "unsubscribe_detected_at": null
         },
-        [plusProduct]: {
+        "com.N2BunpouApp.yuki.product.lifetimeTime": {
           "billing_issues_detected_at": null,
           "expires_date": expireDate,
           "grace_period_expires_date": null,
@@ -95,8 +92,9 @@ if (/\/v1\/subscribers\/[^\/]+\/offerings/.test(url)) {
         }
       }
     }
-  });
+  };
 
+  const fakeResponseBody = JSON.stringify(fakeData);
   const fakeHeaders = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -104,8 +102,8 @@ if (/\/v1\/subscribers\/[^\/]+\/offerings/.test(url)) {
     "X-RevenueCat-Request-Time": Date.now().toString()
   };
 
-  // http-request 阶段直接 mock 200 返回，绕过 304 缓存
   if (typeof  === 'undefined' ||  === null) {
+    // http-request 阶段直接 mock 200 返回
     ({
       response: {
         status: 200,
