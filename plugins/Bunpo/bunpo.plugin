@@ -1,18 +1,15 @@
-#!name=Bunpo Plus/Platinum 解锁
-#!desc=Bunpo 德语/日语等全语言全课程解锁（全接口锁定粉碎：/course 目录 + /lesson 关卡 + RevenueCat 会员双重注入）
+#!name=Bunpo Pro & Platinum Unlock
+#!desc=Bunpo 会员解锁（RevenueCat MITM 定制版 — 100% 对齐 TheGreatMe 实战成功架构）
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/loon-plugin
-#!icon=https://assets.bunpo.app/image/language/round/de.png
-#!version=11.0.0
+#!version=12.0.0
 #!date=2026-10-03
-#!tag=订阅|解锁|bunpo
+#!tag=premium,unlock,bunpo,revenuecat
 
 [MITM]
-hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, bunpo-basic-283414158288.us-central1.run.app, *.run.app, *.bunpo.app
+hostname = api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, api-diagnostics.revenuecat.com
+skip_validation = true
 
 [Script]
-# 请求阶段：强制明文与清洗缓存头（迫使服务端 100% 吐出 200 全包）
-http-request ^https?:\/\/[^/]*(revenuecat\.com|rc-backup\.com)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@f72b5a1686786adefbdb3bf35a4b44175e241ae1/plugins/Bunpo/force_plain.js, timeout=5, tag=Bunpo_ForcePlain
-
-# 响应阶段：粉碎课程目录 /course 和关卡 /lesson 上的所有 locked 锁，并注入 RevenueCat 会员
-http-response ^https?:\/\/[^/]*(revenuecat\.com|rc-backup\.com|run\.app|bunpo\.app)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@f72b5a1686786adefbdb3bf35a4b44175e241ae1/plugins/Bunpo/bunpo.js, requires-body=true, timeout=15, tag=Bunpo_Resp_Unlock
+http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@6979c792f04e5678de356cc175fe8dae3efce8fc/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Req
+http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) requires-body = true, script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@6979c792f04e5678de356cc175fe8dae3efce8fc/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Resp
