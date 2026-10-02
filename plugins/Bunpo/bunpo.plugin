@@ -1,22 +1,18 @@
-#!name=Bunpo Pro & Platinum 解锁
-#!desc=Bunpo 德语/日语等全语言解锁（参考 GitHub 社区 2026 最新方案：Loon 原生 header-del 破除 304 + 树状递归课程锁定粉碎）
+#!name=Bunpo Plus Unlocker
+#!desc=劫持 Bunpo 课程解锁（100% 对齐 Cake 成功架构：force_plain 强制明文 + 后端接口 locked 字段递归抹平 + RevenueCat 会员注入）
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/loon-plugin
 #!icon=https://assets.bunpo.app/image/language/round/de.png
-#!version=13.0.0
+#!version=14.0.0
 #!date=2026-10-03
 #!tag=订阅|解锁|bunpo
 
+[Script]
+# 请求阶段：强制明文，剥离 gzip 与 304 缓存
+http-request ^https?:\/\/[^/]*(revenuecat\.com|rc-backup\.com|run\.app|bunpo\.app)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@373723c85c2debb21ba756107dc5f14a2f6d86b1/plugins/Bunpo/force_plain.js, timeout=5, tag=Bunpo ForcePlain
+
+# 响应阶段：100% 对齐 Cake 树状递归解密（解开课程目录 + 课文题库 + 会员权限）
+http-response ^https?:\/\/[^/]*(revenuecat\.com|rc-backup\.com|run\.app|bunpo\.app)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@373723c85c2debb21ba756107dc5f14a2f6d86b1/plugins/Bunpo/bunpo.js, requires-body=true, timeout=15, tag=Bunpo Plus 解锁
+
 [MITM]
 hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, bunpo-basic-283414158288.us-central1.run.app, *.run.app, *.bunpo.app
-
-[Rewrite]
-# 社区标准解法：使用 Loon 原生高效指令在握手前彻底抹除缓存头，强制官方服务器回 200 全包！
-^https?:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/[^/]+$) header-del X-RevenueCat-ETag
-^https?:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/[^/]+$) header-del x-revenuecat-etag
-^https?:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/[^/]+$) header-del If-None-Match
-^https?:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/[^/]+$) header-del if-none-match
-
-[Script]
-# 响应阶段：注入 RevenueCat Pro/Platinum 会员，并递归粉碎课程大纲 (/course) 与课文 (/lesson) 上的 locked:true
-http-response ^https?:\/\/[^/]*(revenuecat\.com|rc-backup\.com|run\.app|bunpo\.app)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@900b39fb76312be7946fa45ba7ed360db099348e/plugins/Bunpo/bunpo.js, requires-body=true, timeout=15, tag=Bunpo_Pro_Unlock
