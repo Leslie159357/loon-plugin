@@ -1,5 +1,6 @@
-// Bunpo Plus & Platinum Unlock — 仿 TheGreatMe 双模式架构
-// App: Bunpo (com.N2BunpouApp.yuki)
+// Bunpo Plus & Platinum Unlock — 全架构双路劫持
+// 1. RevenueCat 劫持：客户端订阅判定 (plus + platinum)
+// 2. Bunpo 后端 (run.app) 劫持：内容锁定解除 (locked: true -> false, unlocked: false -> true)
 // 适配 Loon / Quantumult X / Surge
 
 const plusId = "com.N2BunpouApp.yuki.product.lifetimeTime";
@@ -73,35 +74,66 @@ function makeFakeCustomerInfo() {
   };
 }
 
-function shouldUnlock(url) {
-  if (!url) return false;
-  if (/\/(offerings|attributes|intro_eligibility|adservices_attribution)\/?($|\?)/.test(url)) return false;
-  return /\/v1\/subscribers\/.+/i.test(url) || /\/v1\/receipts/i.test(url);
+function unlockJson(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) {
+    obj.forEach(item => unlockJson(item));
+    return obj;
+  }
+  for (const k of Object.keys(obj)) {
+    const v = obj[k];
+    if (k === 'locked' && typeof v === 'boolean' && v === true) {
+      obj[k] = false;
+    } else if (k === 'unlocked' && typeof v === 'boolean' && v === false) {
+      obj[k] = true;
+    } else if (v && typeof v === 'object') {
+      unlockJson(v);
+    }
+  }
+  return obj;
 }
 
 try {
-  const url = .url || "";
-  const method = .method || "GET";
-  if (method !== "GET" && method !== "POST") { ({}); }
-  else if (!shouldUnlock(url)) { ({}); }
-  else if (typeof  === "undefined" ||  === null || !) {
-    // http-request 模式：直接应答
-    ({
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      },
-      body: JSON.stringify(makeFakeCustomerInfo())
-    });
+  const url = ( && .url) || "";
+  const isRC = /revenuecat|rc-backup/i.test(url);
+  const isBackend = /run\.app|bunpo/i.test(url);
+
+  // ===== 1. RevenueCat 劫持 =====
+  if (isRC) {
+    if (/\/(offerings|attributes|intro_eligibility)\/?($|\?)/.test(url)) {
+      ({});
+    } else if (typeof  === "undefined" ||  === null || !) {
+      console.log('[Bunpo] RC HTTP-REQUEST MOCK -> 200: ' + url.slice(0, 80));
+      ({
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: JSON.stringify(makeFakeCustomerInfo())
+      });
+    } else {
+      console.log('[Bunpo] RC HTTP-RESPONSE FAKE -> 200: ' + url.slice(0, 80));
+      ({
+        status: 200,
+        headers: Object.assign({}, .headers, { "Content-Type": "application/json" }),
+        body: JSON.stringify(makeFakeCustomerInfo())
+      });
+    }
+  }
+  // ===== 2. 后端接口 (run.app) 内容解锁 =====
+  else if (isBackend && typeof  !== "undefined" &&  && .body) {
+    try {
+      let data = JSON.parse(.body);
+      data = unlockJson(data);
+      console.log('[Bunpo] BACKEND UNLOCKED (locked: false): ' + url.slice(0, 80));
+      ({ body: JSON.stringify(data) });
+    } catch (e) {
+      ({});
+    }
   } else {
-    // http-response 模式：改写响应
-    ({
-      status: 200,
-      headers: Object.assign({}, .headers, { "Content-Type": "application/json" }),
-      body: JSON.stringify(makeFakeCustomerInfo())
-    });
+    ({});
   }
 } catch (e) {
   ({});
