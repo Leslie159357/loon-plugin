@@ -1,12 +1,13 @@
 #!name=Bunpo Plus/Platinum 解锁
-#!desc=解锁 Bunpo 全语言全课程（德语/日语等语法、单词、听力练习与离线内容）
+#!desc=解锁 Bunpo 全语言全课程（德语/日语等语法、单词、听力练习与离线内容）- 双向链路防304/防签名
 #!author=Leslie159357
 #!icon=https://assets.bunpo.app/image/language/round/de.png
 #!date=2026-10-03
-#!version=4.0.0
+#!version=5.0.0
+
+[Script]
+http-request ^https?:\/\/api\.revenuecat\.com\/v1\/subscribers script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Bunpo/bunpo_req.js, timeout=10, tag=Bunpo-NoCache
+http-response ^https?:\/\/api\.revenuecat\.com\/v1\/subscribers script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo-Unlock
 
 [MITM]
 hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com
-
-[Script]
-http-request ^https?:\/\/api\.revenuecat\.com\/v1\/subscribers script-path=https://raw.githubusercontent.com/Leslie159357/loon-plugin/main/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo Subscriber
