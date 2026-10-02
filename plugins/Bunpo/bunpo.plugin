@@ -3,18 +3,19 @@
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/loon-plugin
 #!icon=https://assets.bunpo.app/image/language/round/de.png
-#!version=8.0.0
+#!version=9.0.0
 #!date=2026-10-03
 #!tag=premium,unlock,bunpo,revenuecat
 
 [MITM]
 hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, *.run.app, bunpo-basic-283414158288.us-central1.run.app
+skip_validation = true
 
 [Script]
-# 1. RevenueCat 会员权限判定
-http-request ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@30e8a862abbda8b523d9d1b83be3163789220be5/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Req
-http-response ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@30e8a862abbda8b523d9d1b83be3163789220be5/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_RC_Resp
+# 1. RevenueCat 会员权限判定（请求阶段直接拦截返回 200 会员，断掉 304）
+http-request ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Req
+http-response ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_RC_Resp
 
 # 2. Bunpo 课程内容锁定解除（仿 Cake 锁定字段破解：locked: true -> false）
-http-response ^https?:\/\/bunpo-basic-283414158288\.us-central1\.run\.app\/v3\/content\/lesson script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@30e8a862abbda8b523d9d1b83be3163789220be5/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_Lesson_Unlock
-http-response ^https?:\/\/bunpo-basic-283414158288\.us-central1\.run\.app\/v3\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@30e8a862abbda8b523d9d1b83be3163789220be5/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_Backend_Unlock
+http-response ^https?:\/\/bunpo-basic-283414158288\.us-central1\.run\.app\/v3\/content\/lesson script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_Lesson_Unlock
+http-response ^https?:\/\/bunpo-basic-283414158288\.us-central1\.run\.app\/v3\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_Backend_Unlock
