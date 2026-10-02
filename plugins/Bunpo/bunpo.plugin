@@ -1,21 +1,18 @@
-#!name=Bunpo Plus/Platinum 解锁
-#!desc=Bunpo 德语/日语等全语言全课程解锁（双层架构：RevenueCat 会员 + 后端 locked 内容解锁）
+#!name=Bunpo Plus Unlocker
+#!desc=劫持 Bunpo 课程解锁（完全仿 Cake Plus Unlocker 架构：force_plain 剥离 304/etag/nonce + 后端全接口 locked 递归解密 + RevenueCat 会员注入）
 #!author=Leslie159357
 #!homepage=https://github.com/Leslie159357/loon-plugin
 #!icon=https://assets.bunpo.app/image/language/round/de.png
-#!version=9.0.0
+#!version=10.0.0
 #!date=2026-10-03
-#!tag=premium,unlock,bunpo,revenuecat
-
-[MITM]
-hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, *.run.app, bunpo-basic-283414158288.us-central1.run.app
-skip_validation = true
+#!tag=订阅|解锁|membership
 
 [Script]
-# 1. RevenueCat 会员权限判定（请求阶段直接拦截返回 200 会员，断掉 304）
-http-request ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Req
-http-response ^https?:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_RC_Resp
+# 请求阶段：强制 Accept-Encoding: identity 并剥离 etag/nonce（仿 Cake force_plain.js，强迫服务器下发 200 全包）
+http-request ^https?:\/\/[^/]*(revenuecat\.com|rc-backup\.com)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@470d9e3b9a116b41788a39a25ff9460ddc01cda7/plugins/Bunpo/force_plain.js, timeout=5, tag=Bunpo ForcePlain
 
-# 2. Bunpo 课程内容锁定解除（仿 Cake 锁定字段破解：locked: true -> false）
-http-response ^https?:\/\/bunpo-basic-283414158288\.us-central1\.run\.app\/v3\/content\/lesson script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_Lesson_Unlock
-http-response ^https?:\/\/bunpo-basic-283414158288\.us-central1\.run\.app\/v3\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@2da3b7a56526ec5e094f9812b0f58b423e03e0ad/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo_Backend_Unlock
+# 响应阶段：RevenueCat 注入会员 + Bunpo 后端所有接口（/v3/content/lesson 等）locked 字段递归解密
+http-response ^https?:\/\/[^/]*(revenuecat\.com|rc-backup\.com|run\.app|bunpo\.app)[^/]*\/ script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@470d9e3b9a116b41788a39a25ff9460ddc01cda7/plugins/Bunpo/bunpo.js, requires-body=true, timeout=15, tag=Bunpo Plus 解锁
+
+[MITM]
+hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, bunpo-basic-283414158288.us-central1.run.app, *.run.app, *.bunpo.app
