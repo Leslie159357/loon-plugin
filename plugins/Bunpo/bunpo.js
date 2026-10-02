@@ -1,9 +1,9 @@
-// Bunpo Plus & Platinum Unlock v3.0
+// Bunpo Plus & Platinum Unlock v4.0
 // Author: Leslie159357
 
 const url = .url;
 
-// 如果是 offerings 请求，直接放行
+// offerings 请求放行
 if (url.includes('/offerings')) {
   ({});
 } else {
@@ -102,21 +102,12 @@ if (url.includes('/offerings')) {
     "X-RevenueCat-Request-Time": Date.now().toString()
   };
 
-  if (typeof  === 'undefined' ||  === null) {
-    // http-request 阶段直接 mock 200 返回
-    ({
-      response: {
-        status: 200,
-        headers: fakeHeaders,
-        body: fakeResponseBody
-      }
-    });
-  } else {
-    // http-response 阶段强制覆盖
-    ({
+  // 直接 mock 200 返回
+  ({
+    response: {
       status: 200,
       headers: fakeHeaders,
       body: fakeResponseBody
-    });
-  }
+    }
+  });
 }
