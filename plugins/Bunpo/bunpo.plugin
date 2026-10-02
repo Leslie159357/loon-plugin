@@ -1,13 +1,15 @@
 #!name=Bunpo Plus/Platinum 解锁
-#!desc=解锁 Bunpo 全语言全课程（德语/日语等语法、单词、听力练习与离线内容）- 双向链路防304/防签名
+#!desc=Bunpo 会员解锁（RevenueCat 定制版）— 永久解锁 Plus & Platinum 全语言全课程
 #!author=Leslie159357
-#!icon=https://assets.bunpo.app/image/language/round/de.png
+#!homepage=https://github.com/Leslie159357/loon-plugin
+#!version=6.0.0
 #!date=2026-10-03
-#!version=5.0.0
-
-[Script]
-http-request ^https?:\/\/api\.revenuecat\.com\/v1\/subscribers script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Bunpo/bunpo_req.js, timeout=10, tag=Bunpo-NoCache
-http-response ^https?:\/\/api\.revenuecat\.com\/v1\/subscribers script-path=https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@main/plugins/Bunpo/bunpo.js, requires-body=true, timeout=10, tag=Bunpo-Unlock
+#!tag=premium,unlock,bunpo,revenuecat
 
 [MITM]
-hostname = %APPEND% api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com
+hostname = api.revenuecat.com, api.rc-backup.com, api-paywalls.revenuecat.com, api-diagnostics.revenuecat.com
+skip_validation = true
+
+[Script]
+http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@ba1e54fd4d5567e47368b0bc1963dca8dfff3b3c/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Req
+http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/(subscribers\/|receipts) requires-body = true, script-path = https://testingcf.jsdelivr.net/gh/Leslie159357/loon-plugin@ba1e54fd4d5567e47368b0bc1963dca8dfff3b3c/plugins/Bunpo/bunpo.js, timeout=10, tag=Bunpo_RC_Resp
