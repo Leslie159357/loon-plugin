@@ -1,6 +1,5 @@
-// Bunpo Plus & Platinum Unlock — 全架构双路劫持
-// 1. RevenueCat 劫持：客户端订阅判定 (plus + platinum)
-// 2. Bunpo 后端 (run.app) 劫持：内容锁定解除 (locked: true -> false, unlocked: false -> true)
+// Bunpo Plus & Platinum Unlock v9.0
+// App: Bunpo (com.N2BunpouApp.yuki)
 // 适配 Loon / Quantumult X / Surge
 
 const plusId = "com.N2BunpouApp.yuki.product.lifetimeTime";
@@ -104,14 +103,24 @@ try {
       ({});
     } else if (typeof  === "undefined" ||  === null || !) {
       console.log('[Bunpo] RC HTTP-REQUEST MOCK -> 200: ' + url.slice(0, 80));
+      const fakeHeaders = {
+        "Content-Type": "application/json; charset=utf-8",
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*"
+      };
+      const fakeBody = JSON.stringify(makeFakeCustomerInfo());
+      // 兼容所有 Loon 版本语法：同时包含 response 包裹与顶层字段
       ({
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*"
+        response: {
+          status: 200,
+          statusCode: 200,
+          headers: fakeHeaders,
+          body: fakeBody
         },
-        body: JSON.stringify(makeFakeCustomerInfo())
+        status: 200,
+        statusCode: 200,
+        headers: fakeHeaders,
+        body: fakeBody
       });
     } else {
       console.log('[Bunpo] RC HTTP-RESPONSE FAKE -> 200: ' + url.slice(0, 80));
@@ -128,7 +137,10 @@ try {
       let data = JSON.parse(.body);
       data = unlockJson(data);
       console.log('[Bunpo] BACKEND UNLOCKED (locked: false): ' + url.slice(0, 80));
-      ({ body: JSON.stringify(data) });
+      ({
+        body: JSON.stringify(data),
+        headers: .headers
+      });
     } catch (e) {
       ({});
     }
